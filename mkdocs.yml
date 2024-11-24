@@ -12,17 +12,17 @@ theme:
     code: JetBrains Mono
   language: en
   palette:
-    - scheme: default
+    - scheme: slate
       toggle:
         icon: material/brightness-7 
         name: Switch to dark mode
-      primary: yellow
+      primary: Purple
       accent: pink
-    - scheme: slate
+    - scheme: default
       toggle:
         icon: material/brightness-4
         name: Switch to light mode
-      primary: yellow
+      primary: Purple
       accent: pink
 
 nav:
@@ -31,3 +31,4 @@ nav:
     - Modelo Entidade-Relacionamento: modulo1/MER_Cyberpunk.md
     - Diagrama Entidade-Relacionamento: modulo1/DER_Cyberpunk.md
     - Dicionário de Dados: modulo1/Dicionario.md
+    - Normalização: modulo1/Normalizacao.md
