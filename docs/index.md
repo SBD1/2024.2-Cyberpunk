@@ -41,6 +41,10 @@ O jogo se passa em um futuro distópico de estilo cyberpunk, onde megacorporaç�
         <img src="https://github.com/GabriellyAssuncao.png" width="150px" alt="Gabrielly Assunção"><br>
         <a href="https://github.com/GabriellyAssuncao">Gabrielly Assunção</a>
       </td>
+      <td align="center">
+        <img src="https://github.com/Katuner.png" width="150px" alt="Lucas Meireles"><br>
+        <a href="https://github.com/Katuner">Lucas Meireles</a>
+      </td>
     </tr>
   </table>
 </div>
