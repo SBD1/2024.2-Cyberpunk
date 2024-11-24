@@ -1,0 +1,33 @@
+site_name: Cyberpunk
+
+theme:
+  name: material
+  feature:
+    - navigation.path
+    - navigation.sections
+    - navigation.expand
+    - toc.follow
+  font: 
+    text: montserrat
+    code: JetBrains Mono
+  language: en
+  palette:
+    - scheme: default
+      toggle:
+        icon: material/brightness-7 
+        name: Switch to dark mode
+      primary: yellow
+      accent: pink
+    - scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+      primary: yellow
+      accent: pink
+
+nav:
+  - Sobre: index.md
+  - Módulo 1:
+    - Modelo Entidade-Relacionamento: modulo1/MER_Cyberpunk.md
+    - Diagrama Entidade-Relacionamento: modulo1/DER_Cyberpunk.md
+    - Dicionário de Dados: modulo1/Dicionario.md
