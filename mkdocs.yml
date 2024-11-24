@@ -1,4 +1,5 @@
 site_name: Cyberpunk
+
 theme:
   name: material
   feature:
@@ -23,3 +24,9 @@ theme:
         name: Switch to light mode
       primary: yellow
       accent: pink
+
+nav:
+  - Sobre: index.md
+  - Módulo 1:
+    - Modelo Entidade-Relacionamento: modulo1/MER_Cyberpunk.md
+    - Diagrama Entidade-Relacionamento: modulo1/DER_Cyberpunk.md
