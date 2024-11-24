@@ -1,5 +1,4 @@
 # Introdução
-# Objetivo
 # Tabelas
 
 <div align="center">
@@ -12,4 +11,4 @@
 # Histórico de Versões
 | Data       | Versão | Descrição   | Autor     |
 | ---------- | ------ | ----------- | --------- |
-| 22/11/2024 | 1.0   | Criacao do Documento e Adição das primeiras tabelas. | [@GabriellyAssuncao](https://github.com/GabriellyAssuncao) |
+| 22/11/2024 | 1.0   | Criação do Documento e Adição das primeiras tabelas. | [@GabriellyAssuncao](https://github.com/GabriellyAssuncao) |

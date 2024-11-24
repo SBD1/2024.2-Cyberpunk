@@ -1,9 +1,4 @@
-## Histórico de versões
-
-| Versão |  Data  | Descrição | Autor |
-|:------:|:------:|:---------:|------:|
-| 1.0 | 23/11/2024 | Criação do MER | [João Vitor Santos](https://github.com/Jauzimm) |
-
+# Introdução
 # Modelo Entidade Relacionamento
 
 ## Entidades
@@ -83,3 +78,9 @@ NPC - possui - MercadoClandestino
 CyberLutador - possui - Mochila
 * CyberLutador possui uma ou varias Mochilas (1, N)
 * Mochila é possuida por um único cyberLutador (1, 1)
+
+## Histórico de versões
+
+| Versão |  Data  | Descrição | Autor |
+|:------:|:------:|:---------:|------:|
+| 1.0 | 23/11/2024 | Criação do MER | [João Vitor Santos](https://github.com/Jauzimm) |
