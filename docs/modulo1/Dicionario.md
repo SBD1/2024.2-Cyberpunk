@@ -72,6 +72,21 @@
   <p><b>Figura 14: Diálogo</b></p> 
 </div>
 
+<div align="center">
+  <img align="center" src="https://raw.githubusercontent.com/SBD1/2024.2-Cyberpunk/refs/heads/docs/docs/assets/dd-lutador.png" alt="mapa" width="500" height="400">
+  <p><b>Figura 15: CyberLutador</b></p> 
+</div>
+
+<div align="center">
+  <img align="center" src="https://raw.githubusercontent.com/SBD1/2024.2-Cyberpunk/refs/heads/docs/docs/assets/dd-inimigo.png" alt="mapa" width="500" height="400">
+  <p><b>Figura 16: Inimigo</b></p> 
+</div>
+
+<div align="center">
+  <img align="center" src="https://raw.githubusercontent.com/SBD1/2024.2-Cyberpunk/refs/heads/docs/docs/assets/dd-inst_inimigo.png" alt="mapa" width="500" height="400">
+  <p><b>Figura 17: Instância de Inimigo</b></p> 
+</div>
+
 # Histórico de Versões
 | Data       | Versão | Descrição   | Autor     |
 | ---------- | ------ | ----------- | --------- |
