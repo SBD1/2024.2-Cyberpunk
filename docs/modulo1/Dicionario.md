@@ -52,6 +52,26 @@
   <p><b>Figura 10: CodeKeepers</b></p> 
 </div>
 
+<div align="center">
+  <img align="center" src="https://raw.githubusercontent.com/SBD1/2024.2-Cyberpunk/refs/heads/docs/docs/assets/dd-exo.png" alt="mapa" width="500" height="400">
+  <p><b>Figura 11: ExoHumanos</b></p> 
+</div>
+
+<div align="center">
+  <img align="center" src="https://raw.githubusercontent.com/SBD1/2024.2-Cyberpunk/refs/heads/docs/docs/assets/dd-npc.png" alt="mapa" width="500" height="400">
+  <p><b>Figura 12: NPC</b></p> 
+</div>
+
+<div align="center">
+  <img align="center" src="https://raw.githubusercontent.com/SBD1/2024.2-Cyberpunk/refs/heads/docs/docs/assets/dd-player.png" alt="mapa" width="500" height="400">
+  <p><b>Figura 13: Player</b></p> 
+</div>
+
+<div align="center">
+  <img align="center" src="https://raw.githubusercontent.com/SBD1/2024.2-Cyberpunk/refs/heads/docs/docs/assets/dd-dialogo.png" alt="mapa" width="500" height="400">
+  <p><b>Figura 14: Diálogo</b></p> 
+</div>
+
 # Histórico de Versões
 | Data       | Versão | Descrição   | Autor     |
 | ---------- | ------ | ----------- | --------- |
