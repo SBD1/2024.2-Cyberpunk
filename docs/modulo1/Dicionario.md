@@ -87,6 +87,26 @@
   <p><b>Figura 17: Instância de Inimigo</b></p> 
 </div>
 
+<div align="center">
+  <img align="center" src="https://raw.githubusercontent.com/SBD1/2024.2-Cyberpunk/refs/heads/docs/docs/assets/dd-implante.png" alt="mapa" width="500" height="400">
+  <p><b>Figura 18: Implante</b></p> 
+</div>
+
+<div align="center">
+  <img align="center" src="https://raw.githubusercontent.com/SBD1/2024.2-Cyberpunk/refs/heads/docs/docs/assets/dd-capacete.png" alt="mapa" width="500" height="400">
+  <p><b>Figura 19: Capacete Neural</b></p> 
+</div>
+
+<div align="center">
+  <img align="center" src="https://raw.githubusercontent.com/SBD1/2024.2-Cyberpunk/refs/heads/docs/docs/assets/dd-visao.png" alt="mapa" width="500" height="400">
+  <p><b>Figura 20: Visão Cibernética</b></p> 
+</div>
+
+<div align="center">
+  <img align="center" src="https://raw.githubusercontent.com/SBD1/2024.2-Cyberpunk/refs/heads/docs/docs/assets/dd-braco.png" alt="mapa" width="500" height="400">
+  <p><b>Figura 21: Braço Robótico</b></p> 
+</div>
+
 # Histórico de Versões
 | Data       | Versão | Descrição   | Autor     |
 | ---------- | ------ | ----------- | --------- |
