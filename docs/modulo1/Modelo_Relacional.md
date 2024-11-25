@@ -4,13 +4,14 @@ O modelo relacional é uma das etapas de conversão do diagrama feito anteriorme
 
 # Modelo Relacional
 
-Abaixo se encontra o Modelo Relacional referente ao projeto aqui trabalhado:
+Abaixo na figura 1, se encontra o Modelo Relacional referente ao projeto aqui trabalhado:
 
-<h6 align="center">Imagem 1 - Modelo Relacional do projeto Cyberpunk</h6>
+<h6 align="center">Figura 1 - Modelo Relacional do projeto Cyberpunk</h6>
 
 ![Imagem Modelo Relacional](../assets/Lógico_1.png)
 
-<h6 align="center">Fonte: Autoria Própria </a></h6>
+<h6 align="center">Fonte: <a href="https://github.com/Jauzimm">João Vitor Santos</a>,<a href="https://github.com/Katuner">Lucas Meireles</a>, <a href="https://github.com/EduardaSMarques">Maria Eduarda Marques</a>.2024.</h6>
+>
 
 ## Histórico de versões
 
