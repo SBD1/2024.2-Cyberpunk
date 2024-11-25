@@ -2,7 +2,7 @@
 
 O dicionário de dados é uma documentação estruturada que descreve, de forma detalhada, os elementos de dados utilizados em um sistema. Ele inclui informações como nomes, tipos, tamanhos, restrições e descrições de cada atributo, servindo como uma referência essencial para o entendimento e implementação do banco de dados.  
 
-# Dicionário
+# Dicionário de Dados
 
 Neste projeto, na o dicionário de dados foi desenvolvido com base no modelo relacional elaborado pelo grupo. Utilizamos o modelo como base para definir as tabelas, colunas e relacionamentos do sistema. O trabalho coletivo, aliado a revisões cuidadosas, assegurou que todas as informações relevantes fossem registradas, refletindo a complexidade e as necessidades do jogo ambientado no universo cyberpunk.
 
