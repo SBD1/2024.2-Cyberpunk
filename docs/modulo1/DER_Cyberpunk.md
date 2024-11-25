@@ -1,12 +1,17 @@
 # Introdução
 
+<p align="justify">
 O Diagrama Entidade-Relacionamento (DER) é uma ferramenta visual usada para modelar bancos de dados, representando as entidades do sistema e seus relacionamentos. Ele ajuda a organizar e estruturar os dados antes da implementação, facilitando a compreensão das interações entre as entidades, como clientes e produtos.
+</p>
 
 # Diagrama Entidade-Relacionamento
 
+<p align="justify">
 O DER apresentado na figura 1, foi desenvolvido pelo grupo como parte do projeto do jogo ambientado no universo cyberpunk. O processo de criação foi colaborativo, envolvendo reuniões frequentes para alinhamento de ideias e integração de contribuições de todos os membros. Durante essas sessões, discutimos e refinamos os conceitos, sempre mantendo o foco em representar de forma clara as entidades e os relacionamentos que compõem a lógica do jogo.  
-
-Para garantir a qualidade e a aderência às melhores práticas, dúvidas surgidas durante o desenvolvimento foram esclarecidas junto ao professor responsável pela disciplina, que forneceu orientações valiosas sobre os ajustes necessários. 
+</p>
+<p align="justify">
+Para garantir a qualidade e a aderência às melhores práticas, dúvidas surgidas durante o desenvolvimento foram esclarecidas junto ao professor responsável pela disciplina, que forneceu orientações valiosas sobre os ajustes necessários.
+</p>
 
 <h6 align="center">Figura 1 - Diagrama de Entidade de Relacionamento do projeto Cyberpunk</h6>
 

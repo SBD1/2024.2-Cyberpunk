@@ -1,6 +1,8 @@
 # Introdução
 
-O modelo relacional é uma das etapas de conversão do diagrama feito anteriormente em [Diagrama de Entidade e Relacionamento](DER_Cyberpunk.md) para uma versão lógica, mais próxima do que relmente é implementado e como é implementado no banco de dados físico. 
+<p align="justify">
+O modelo relacional é uma das etapas de conversão do diagrama feito anteriormente em [Diagrama de Entidade e Relacionamento](DER_Cyberpunk.md) para uma versão lógica, mais próxima do que relmente é implementado e como é implementado no banco de dados físico.
+</p>
 
 # Modelo Relacional
 
