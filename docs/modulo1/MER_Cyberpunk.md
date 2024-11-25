@@ -33,31 +33,31 @@
 
 ## Atributos
 
-* **EXOHUMANO**: 
-    * **NPC**: 
-    * **CYBERLUTADOR**:
-        * **INIMIGO**:
-        * **PLAYER**:
-* **MOCHILA**:
-* **ITEM**:
-    * **COMPONENTE**:
-    * **BIOCHIP**:
-        * **CHIPCURA**:
-        * **CHIPADRENALINA**:
-    * **ITEMCHAVE**:
-* **IMPLANTE**:
-    * **BRACOROBOTICO**:
-    * **CAPACETENEURAL**:
-    * **VISAOCIBERNETICA**:
-* **MERCADOCLANDESTINO**:
-* **MISSÃO**:
-* **SALA**:
-* **REGIÃO**:
-* **MAPA**:
-* **PUZZLE**:
-    * **DECODIFICAR**:
-    * **MATEMATICO**:
-* **CARRO**:
+* **EXOHUMANO**: <u>idExoHumano</u>, nome
+    * **NPC**: <u>idNPC</u>
+    * **CYBERLUTADOR**: velocidade, vida, inteligência, furtividade, percepção, resistência
+        * **INIMIGO**: <u>idInimigo</u>
+        * **PLAYER**: <u>idPlayer</u>
+* **MOCHILA**: <u>idInventario</u>, capacidade, itemArmazenado
+* **ITEM**: <u>idItem</u>, nomeItem, valor, descricao
+    * **COMPONENTE**: 
+    * **BIOCHIP**
+        * **CHIPCURA**
+        * **CHIPADRENALINA**
+    * **ITEMCHAVE**
+* **IMPLANTE**: <u>idImplante</u>, nomeImplante, tipo, localInstalação, upgrade
+    * **BRACOROBOTICO**
+    * **CAPACETENEURAL**
+    * **VISAOCIBERNETICA**
+* **MERCADOCLANDESTINO**: <u>idLoja</u>, nomeLoja, produtoFornecido
+* **MISSÃO**: <u>idMissao</u>, nomeMissao, objetivo, recompensa, itensNecessario
+* **SALA**: <u>idSala</u>, nomeSala
+* **REGIÃO**: <u>idRegiao</u>, nomeRegiao
+* **MAPA**: <u>idMapa</u>, nomeMapa
+* **PUZZLE**: <u>idPuzzle</u>, nomePuzzle, dificuldade
+    * **DECODIFICAR**
+    * **MATEMATICO**
+* **CARRO**: <u>idCarro</u>, capacidade, velocidade, combustivel, preco, conservacao, nivelSeguranca, blindagem
 
 ## Relacionamentos
 
@@ -130,7 +130,7 @@ Inimigo - gera - INSTANCIAINIMIGO
 * INSTANCIAINIMIGO é gerado por um único Inimio (1,1)
 
 CYBERLUTADOR - possui - MOCHILA
-* CYBERLUTADOR possui uma ou várias MOCHILAs (1,N)
+* CYBERLUTADOR possui uma ou várias MOCHILAS (1,N)
 * MOCHILA é possuída por um único CYBERLUTADOR (1,1)
 
 CYBERLUTADOR - utiliza - IMPLANTE 
@@ -139,7 +139,7 @@ CYBERLUTADOR - utiliza - IMPLANTE
 
 MOCHILA - possui - INSTANCIAITEM
 * MOCHILA possui zero ou várias INSTANCIAITEM (0,N)
-* INSTANCIAITEM é possuída por zero ou várias MOCHILAs (0,N)
+* INSTANCIAITEM é possuída por zero ou várias MOCHILAS (0,N)
 
 ITEM - gera - INSTANCIAITEM
 * ITEM gera um ou várias INSTANCIAITEM (1,N)
@@ -155,3 +155,4 @@ IMPLANTE - possui - COMPONENTE
 |:------:|:------:|:---------:|------:|
 | 1.0 | 23/11/2024 | Criação do MER | [João Vitor Santos](https://github.com/Jauzimm) |
 | 1.1 | 24/11/2024 | Adição dos Relacionamentos no MER | [João Vitor Santos](https://github.com/Jauzimm) |
+| 1.2 | 25/11/2024 | Adição dos atributos das entidades | [Charles Serafim Morais](https://github.com/charles-serafim) |
