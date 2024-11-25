@@ -4,7 +4,7 @@
 
 
 <div align="center">
-  <img align="center" src="assets/cyberpunk.jpg" alt="cyberpunk" width="500" height="500">
+  <img align="center" src="docs/assets/cyberpunk.jpg" alt="cyberpunk" width="500" height="500">
   <p><b>Figura 1: Cyberpunk</b></p> 
 </div>
 
