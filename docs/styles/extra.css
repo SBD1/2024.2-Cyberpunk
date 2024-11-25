@@ -1,0 +1,12 @@
+.md-header__logo svg {
+  width: 30px !important;
+}
+
+.md-header__button.md-logo img {
+  width: auto;
+  height: 50px;
+}
+.md-typeset h1 {
+  color: var(--md-primary-fg-color);
+  font-weight: 500;
+}
