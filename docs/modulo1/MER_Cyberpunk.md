@@ -3,151 +3,151 @@
 
 ## Entidades
 
-* **ExoHumano**
+* **EXOHUMANO**
     * **NPC**
-    * **CyberLutador**
-        * **Inimigo**
-        * **InstanciaInimigo**
-        * **Player**
-* **Mochila**
-* **InstanciaItem**
-* **Item**
-    * **Componente**
-    * **BioChip**
-        * **ChipCura**
-        * **ChipAdrenalina**
-    * **ItemChave**
-* **Implante**
-    * **BracoRobotico**
-    * **CapaceteNeural**
-    * **VisaoCibernetica**
-* **MercadoClandestino**
-* **Missão**
-* **Sala**
-* **Regiao**
-* **Mapa**
-* **Puzzle**
-    * **Decodificar**
-    * **Matematico**
-* **Carro**
+    * **CYBERLUTADOR**
+        * **INIMIGO**
+        * **INSTANCIAINIMIGO**
+        * **PLAYER**
+* **MOCHILA**
+* **INSTANCIAITEM**
+* **ITEM**
+    * **COMPONENTE**
+    * **BIOCHIP**
+        * **CHIPCURA**
+        * **CHIPADRENALINA**
+    * **ITEMCHAVE**
+* **IMPLANTE**
+    * **BRACOROBOTICO**
+    * **CAPACETENEURAL**
+    * **VISAOCIBERNETICA**
+* **MERCADOCLANDESTINO**
+* **MISSÃO**
+* **SALA**
+* **REGIÃO**
+* **MAPA**
+* **PUZZLE**
+    * **DECODIFICAR**
+    * **MATEMATICO**
+* **CARRO**
 
 ## Atributos
 
-* **ExoHumano**: 
-    * **NPC**: 
-    * **CyberLutador**:
-        * **Inimigo**:
-        * **Player**:
-* **Mochila**:
-* **Item**:
-    * **Componente**:
-    * **BioChip**:
-        * **ChipCura**:
-        * **ChipAdrenalina**:
-    * **ItemChave**:
-* **Implante**:
-    * **BracoRobotico**:
-    * **CapaceteNeural**:
-    * **VisaoCibernetica**:
-* **MercadoClandestino**:
-* **Missão**:
-* **Sala**:
-* **Regiao**:
-* **Mapa**:
-* **Puzzle**:
-    * **Decodificar**:
-    * **Matematico**:
-* **Carro**:
+* **EXOHUMANO**: <u>idExoHumano</u>, nome
+    * **NPC**: <u>idNPC</u>
+    * **CYBERLUTADOR**: velocidade, vida, inteligência, furtividade, percepção, resistência
+        * **INIMIGO**: <u>idInimigo</u>
+        * **PLAYER**: <u>idPlayer</u>
+* **MOCHILA**: <u>idInventario</u>, capacidade, itemArmazenado
+* **ITEM**: <u>idItem</u>, nomeItem, valor, descricao
+    * **COMPONENTE**: 
+    * **BIOCHIP**
+        * **CHIPCURA**
+        * **CHIPADRENALINA**
+    * **ITEMCHAVE**
+* **IMPLANTE**: <u>idImplante</u>, nomeImplante, tipo, localInstalação, upgrade
+    * **BRACOROBOTICO**
+    * **CAPACETENEURAL**
+    * **VISAOCIBERNETICA**
+* **MERCADOCLANDESTINO**: <u>idLoja</u>, nomeLoja, produtoFornecido
+* **MISSÃO**: <u>idMissao</u>, nomeMissao, objetivo, recompensa, itensNecessario
+* **SALA**: <u>idSala</u>, nomeSala
+* **REGIÃO**: <u>idRegiao</u>, nomeRegiao
+* **MAPA**: <u>idMapa</u>, nomeMapa
+* **PUZZLE**: <u>idPuzzle</u>, nomePuzzle, dificuldade
+    * **DECODIFICAR**
+    * **MATEMATICO**
+* **CARRO**: <u>idCarro</u>, capacidade, velocidade, combustivel, preco, conservacao, nivelSeguranca, blindagem
 
 ## Relacionamentos
 
-ExoHumano - participa - Missao
-* ExoHumano participa de zero ou várias Missões (0,1)
-* Missão tem a participação de um unico ExoHumano (1,1)
+EXOHUMANO - participa - MISSÃO
+* EXOHUMANO participa de zero ou várias MISSÕES (0,1)
+* MISSÃO tem a participação de um unico EXOHUMANO (1,1)
 
-ExoHumano - possui - Dialogo
-* ExoHumano possui zero ou vários Dialogos (0,1)
-* Dialogo é possuido por um unico ExoHumano (1,1)
+EXOHUMANO - possui - DIALOGO
+* EXOHUMANO possui zero ou vários DIALOGOS (0,1)
+* DIALOGO é possuido por um unico EXOHUMANO (1,1)
 
-ExoHumano - esta - Sala
-* Varios ExoHumanos estão em varias Salas (N, M)
-* Sala pode estar com zero ou varios ExoHumanos (0,N)
+EXOHUMANO - esta - SALA
+* Varios EXOHUMANOS estão em varias SALAS (N, M)
+* SALA pode estar com zero ou varios EXOHUMANOS (0,N)
 
-ExoHumano - participa - Faccao
-* ExoHumano participa de uma unica Facçao (1,1)
-* Facção tem a participação de zero ou vários ExoHumanos (0,N)
+EXOHUMANO - participa - FACCAO
+* EXOHUMANO participa de uma unica FACÇÃO (1,1)
+* FACÇÃO tem a participação de zero ou vários EXOHUMANOS (0,N)
 
-NPC - possui - MercadoClandestino
-* NPC possui zero ou um MercadoClandestino (0,1)
-* MercadoClandestino é possuido por um unico NPC (1,1)
+NPC - possui - MERCADOCLANDESTINO
+* NPC possui zero ou um MERCADOCLANDESTINO (0,1)
+* MERCADOCLANDESTINO é possuido por um unico NPC (1,1)
 
-MercadoClandestino - possui - Carro
-* MercadoClandestino possui zero ou vários Carros (0,N)
-* Carro é possuido por um único MercadoClandestino (1,1)
+MERCADOCLANDESTINO - possui - CARRO
+* MERCADOCLANDESTINO possui zero ou vários CARROS (0,N)
+* CARRO é possuido por um único MERCADOCLANDESTINO (1,1)
 
-MercadoClandestino - vende - Item
-* MercadoClandestino vende um ou varios Itens (1,N)
-* Item é vendido por zero ou varios MercadoClandestinos (0,N)
+MERCADOCLANDESTINO - vende - ITEM
+* MERCADOCLANDESTINO vende um ou varios ITENS (1,N)
+* ITEM é vendido por zero ou varios MERCADOCLANDESTINOS (0,N)
 
-Player - acessa - MercadoClandestino
-* Player acessa zero ou varios MercadoClandestinos (0,N)
-* MercadoClandestino pode ser acessado por zero ou um unico Player (0,1)
+PLAYER - acessa - MERCADOCLANDESTINO
+* PLAYER acessa zero ou varios MERCADOCLANDESTINOS (0,N)
+* MERCADOCLANDESTINO pode ser acessado por zero ou um unico PLAYER (0,1)
 
-Player - utiliza - Carro
-* Player utiliza zero ou um Carro (0,1)
-* Carro é utilizado por zero ou um Player (0,1)
+PLAYER - utiliza - CARRO
+* PLAYER utiliza zero ou um CARRO (0,1)
+* CARRO é utilizado por zero ou um PLAYER (0,1)
 
-Player - resolve - Puzzle
-* Player resolve zero ou um Puzzle (0,1)
-* Puzzle é resolvido por zero ou um Player (0,1)
+PLAYER - resolve - PUZZLE
+* PLAYER resolve zero ou um PUZZLE (0,1)
+* PUZZLE é resolvido por zero ou um PLAYER (0,1)
 
-Carro - esta - Regiao 
-* Carro esta em uma única Região (1,1)
-* Região pode estar com zero ou vários Carros (0,N)
+CARRO - esta - REGIÃO 
+* CARRO esta em uma única REGIÃO (1,1)
+* REGIÃO pode estar com zero ou vários CARROS (0,N)
 
-Região - esta - Mapa
-* Região esta em um único Mapa (1,1)
-* Mapa pode estar com um ou várias Regiões (1,N)
+REGIÃO - esta - MAPA
+* REGIÃO esta em um único MAPA (1,1)
+* MAPA pode estar com um ou várias REGIÕES (1,N)
 
-Sala - esta - Regiao
-* Sala esta em uma ou várias Regiões (1,N)
-* Região pode estar com zero ou várias Salas (0,N)
+SALA - esta - REGIÃO
+* SALA esta em uma ou várias REGIÕES (1,N)
+* REGIÃO pode estar com zero ou várias SALAS (0,N)
 
-Sala - conecta - Sala
-* Sala conecta em uma ou seis Salas (1,6)
-* Sala é conectada por uma ou seis Sala (1,6)
+SALA - conecta - SALA
+* SALA conecta em uma ou seis SALAS (1,6)
+* SALA é conectada por uma ou seis SALA (1,6)
 
-Puzzle - esta - Missão
-* Puzzle esta em zero ou várias missões (0,N)
-* Missão pode estar com zero ou varios Puzzles (0,N)
+PUZZLE - esta - MISSÃO
+* PUZZLE esta em zero ou várias MISSÕES (0,N)
+* MISSÃO pode estar com zero ou varios PUZZLES (0,N)
 
-Player - enfrente - InstanciaInimigo
-* Player enfrenta uma ou várias InstanciaInimigo (1,N)
-* InstanciaInimigo é enfrentado por um único player (1,1)
+PLAYER - enfrente - INSTANCIAINIMIGO
+* PLAYER enfrenta uma ou várias INSTANCIAINIMIGO (1,N)
+* INSTANCIAINIMIGO é enfrentado por um único PLAYER (1,1)
 
-Inimigo - gera - InstanciaInimigo
+Inimigo - gera - INSTANCIAINIMIGO
 * Inimigo gera uma ou várias InstanciasInimigo (1,N)
-* InstanciaInimigo é gerado por um único Inimio (1,1)
+* INSTANCIAINIMIGO é gerado por um único Inimio (1,1)
 
-CyberLutador - possui - Mochila
-* CyberLutador possui uma ou várias Mochilas (1,N)
-* Mochila é possuída por um único CyberLutador (1,1)
+CYBERLUTADOR - possui - MOCHILA
+* CYBERLUTADOR possui uma ou várias MOCHILAS (1,N)
+* MOCHILA é possuída por um único CYBERLUTADOR (1,1)
 
-CyberLutador - utiliza - Implante 
-* CyberLutador utiliza zero ou vários Implantes (0,N)
-* Implante é utilizado por zero ou vários CyberLutador (0,N)
+CYBERLUTADOR - utiliza - IMPLANTE 
+* CYBERLUTADOR utiliza zero ou vários IMPLANTES (0,N)
+* IMPLANTE é utilizado por zero ou vários CYBERLUTADOR (0,N)
 
-Mochila - possui - InstanciaItem
-* Mochila possui zero ou várias InstanciaItem (0,N)
-* InstanciaItem é possuída por zero ou várias Mochilas (0,N)
+MOCHILA - possui - INSTANCIAITEM
+* MOCHILA possui zero ou várias INSTANCIAITEM (0,N)
+* INSTANCIAITEM é possuída por zero ou várias MOCHILAS (0,N)
 
-Item - gera - InstanciaItem
-* Item gera um ou várias InstanciaItem (1,N)
-* InstanciaItem é gerado por um único Item (1,1)
+ITEM - gera - INSTANCIAITEM
+* ITEM gera um ou várias INSTANCIAITEM (1,N)
+* INSTANCIAITEM é gerado por um único ITEM (1,1)
 
-Implante - possui - Componente
-* Implante possui um ou vários Componentes (1,N)
-* Componente é possuído por um ou vários Implantes (1,N)
+IMPLANTE - possui - COMPONENTE
+* IMPLANTE possui um ou vários COMPONENTES (1,N)
+* COMPONENTE é possuído por um ou vários IMPLANTES (1,N)
 
 ## Histórico de versões
 
@@ -155,3 +155,4 @@ Implante - possui - Componente
 |:------:|:------:|:---------:|------:|
 | 1.0 | 23/11/2024 | Criação do MER | [João Vitor Santos](https://github.com/Jauzimm) |
 | 1.1 | 24/11/2024 | Adição dos Relacionamentos no MER | [João Vitor Santos](https://github.com/Jauzimm) |
+| 1.2 | 25/11/2024 | Adição dos atributos das entidades | [Charles Serafim Morais](https://github.com/charles-serafim) |
