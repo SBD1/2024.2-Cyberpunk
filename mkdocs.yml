@@ -5,8 +5,8 @@ site_name: Cyberpunk
 
 theme:
   name: material
-  logo: /assets/logo3.png
-  favicon: /assets/logo2.png
+  logo: assets/images/logo3.png
+  favicon: assets/images/logo2.png
   feature:
     - navigation.tracking
     - navigation.sections
