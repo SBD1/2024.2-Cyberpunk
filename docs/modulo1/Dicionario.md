@@ -193,7 +193,7 @@ Neste projeto, na o dicionário de dados foi desenvolvido com base no modelo rel
 # Histórico de Versões
 | Data       | Versão | Descrição   | Autor     |
 | ---------- | ------ | ----------- | --------- |
-| 23/11/2024 | 1.0   | Criacao do Documento e Adição das primeiras tabelas. | [@GabriellyAssuncao](https://github.com/GabriellyAssuncao) |
-| 24/11/2024 | 1.1   | Adição de outras tabelas | [@GabriellyAssuncao](https://github.com/GabriellyAssuncao) |
-| 24/11/2024 | 1.2   | Mais algumas tabelas | [@GabriellyAssuncao](https://github.com/GabriellyAssuncao) |
+| 23/11/2024 | 1.0   | Criacao do Documento e Adição das primeiras tabelas. | [GabriellyAssuncao](https://github.com/GabriellyAssuncao) |
+| 24/11/2024 | 1.1   | Adição de outras tabelas | [GabriellyAssuncao](https://github.com/GabriellyAssuncao) |
+| 24/11/2024 | 1.2   | Mais algumas tabelas | [GabriellyAssuncao](https://github.com/GabriellyAssuncao) |
 | 25/11/2024 | 1.3   | Adicionando introdução, figuras 22 a 26 e corrigindo padronização | [Maria Eduarda Marques](https://github.com/EduardaSMarques) |

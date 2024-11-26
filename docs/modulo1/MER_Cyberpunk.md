@@ -1,8 +1,12 @@
 # Introdução
 
+<p align="justify">
 A modelagem conceitual é uma etapa fundamental no processo de desenvolvimento de sistemas de banco de dados. Essa fase visa representar as estruturas e restrições de forma abstrata, proporcionando uma visão clara e compreensível dos requisitos do sistema antes de sua implementação. Essa abordagem auxilia na identificação de problemas e inconsistências iniciais, evitando retrabalho em etapas posteriores.
+</p>
 
+<p align="justify">
 Entre os métodos de modelagem conceitual, o Modelo Entidade-Relacionamento (MER) se destaca como uma das ferramentas mais amplamente utilizadas. O MER permite a representação gráfica de entidades, atributos e relacionamentos, estabelecendo uma base sólida para a construção de um banco de dados lógico e físico. Sua importância reside na capacidade de comunicar, de forma intuitiva, a estrutura e os relacionamentos do sistema tanto para especialistas técnicos quanto para usuários finais.
+</p>
 
 # Objetivo
 
