@@ -1,29 +1,49 @@
+repo_url: https://github.com/SBD1/2024.2-Cyberpunk
+repo_name: 2024.2-Cyberpunk
+
 site_name: Cyberpunk
 
 theme:
   name: material
+  logo: /assets/logo3.png
+  favicon: /assets/logo2.png
   feature:
-    - navigation.path
+    - navigation.tracking
     - navigation.sections
     - navigation.expand
-    - toc.follow
+    - toc.follow  
+    - content.code.annotate
+    - tabs.sticky
   font: 
-    text: montserrat
+    text: Montserrat
     code: JetBrains Mono
-  language: en
+  language: pt
   palette:
-    - scheme: slate
-      toggle:
-        icon: material/brightness-7 
-        name: Switch to dark mode
-      primary: Purple
-      accent: pink
     - scheme: default
       toggle:
-        icon: material/brightness-4
+        icon: material/weather-night
+        name: Switch to dark mode
+      primary: deep purple
+      accent: Pink
+    - scheme: slate
+      toggle:
+        icon: material/weather-sunny
         name: Switch to light mode
-      primary: Purple
-      accent: pink
+      primary: deep purple
+      accent: Pink
+  features:
+    - instant
+    - navigation.tabs
+  search:
+    lang: en
+    separator: "-"
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/seuusuario
+    - icon: fontawesome/brands/twitter
+      link: https://twitter.com/seuperfil
+    - icon: fontawesome/brands/linkedin
+      link: https://linkedin.com/in/seuusuario
 
 nav:
   - Sobre: index.md
@@ -31,4 +51,29 @@ nav:
     - Modelo Entidade-Relacionamento: modulo1/MER_Cyberpunk.md
     - Diagrama Entidade-Relacionamento: modulo1/DER_Cyberpunk.md
     - Dicionário de Dados: modulo1/Dicionario.md
-    - Normalização: modulo1/Normalizacao.md
+    - Modelo Relacional: modulo1/Modelo_Relacional.md
+
+markdown_extensions:
+  - admonition
+  - codehilite #formatar coodigo
+  - footnotes #notas de rodape
+  - toc: # table of contents
+      permalink: true
+  - pymdownx.highlight
+  - pymdownx.inlinehilite
+  - pymdownx.superfences #formatar codigo
+  - pymdownx.details #notas expandiveis
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist: #checkoboxes
+      custom_checkbox: true 
+  - pymdownx.arithmatex #matematica
+
+plugins:
+  - search
+
+extra_css:
+  - styles/extra.css
+
+extra_javascript:
+  - scripts/extra.js

@@ -4,7 +4,7 @@
 
 
 <div align="center">
-  <img align="center" src="assets/cyberpunk.jpg" alt="cyberpunk" width="500" height="500">
+  <img align="center" src="docs/assets/cyberpunk.jpg" alt="cyberpunk" width="500" height="500">
   <p><b>Figura 1: Cyberpunk</b></p> 
 </div>
 
@@ -24,8 +24,8 @@ O jogo se passa em um futuro distópico de estilo cyberpunk, onde megacorporaç�
 
 <div align="center">
 
-| <img src="https://github.com/Jauzimm.png" width="150px"> | <img src="https://github.com/charles-serafim.png" width="150px"> | <img src="https://github.com/EduardaSMarques.png" width="150px"> | <img src="https://github.com/GabriellyAssuncao.png" width="150px"> |
-|:----------------:|:--------------------:|:---------------------:|:-------------------:|
-|[João Vitor Santos](https://github.com/Jauzimm)|[Charles Serafim](https://github.com/charles-serafim)|[Eduarda Marques](https://github.com/EduardaSMarques)|[Gabrielly Assunção](https://github.com/GabriellyAssuncao)|
+| <img src="https://github.com/Jauzimm.png" width="150px"> | <img src="https://github.com/charles-serafim.png" width="150px"> | <img src="https://github.com/EduardaSMarques.png" width="150px"> | <img src="https://github.com/GabriellyAssuncao.png" width="150px"> | <img src="https://github.com/Katuner.png" width="150px"> |
+|:----------------:|:--------------------:|:---------------------:|:-------------------:|:-------------------:|
+|[João Vitor Santos](https://github.com/Jauzimm)|[Charles Serafim](https://github.com/charles-serafim)|[Eduarda Marques](https://github.com/EduardaSMarques)|[Gabrielly Assunção](https://github.com/GabriellyAssuncao)| [Lucas Meireles](https://github.com/Katuner)|
 
 </div>
