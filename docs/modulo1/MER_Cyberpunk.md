@@ -1,4 +1,17 @@
 # Introdução
+
+<p align="justify">
+A modelagem conceitual é uma etapa fundamental no processo de desenvolvimento de sistemas de banco de dados. Essa fase visa representar as estruturas e restrições de forma abstrata, proporcionando uma visão clara e compreensível dos requisitos do sistema antes de sua implementação. Essa abordagem auxilia na identificação de problemas e inconsistências iniciais, evitando retrabalho em etapas posteriores.
+</p>
+
+<p align="justify">
+Entre os métodos de modelagem conceitual, o Modelo Entidade-Relacionamento (MER) se destaca como uma das ferramentas mais amplamente utilizadas. O MER permite a representação gráfica de entidades, atributos e relacionamentos, estabelecendo uma base sólida para a construção de um banco de dados lógico e físico. Sua importância reside na capacidade de comunicar, de forma intuitiva, a estrutura e os relacionamentos do sistema tanto para especialistas técnicos quanto para usuários finais.
+</p>
+
+# Objetivo
+
+Este documento tem como propósito descrever, de maneira detalhada, as entidades, atributos e relacionamentos identificados no sistema, utilizando o Modelo Entidade-Relacionamento como base. A visualização gráfica resultante do MER será representada no Diagrama Entidade-Relacionamento (DER), servindo como referência principal para o desenvolvimento subsequente do banco de dados.
+
 # Modelo Entidade Relacionamento
 
 ## Entidades
@@ -60,94 +73,94 @@
 * **CARRO**: <u>idCarro</u>, capacidade, velocidade, combustivel, preco, conservacao, nivelSeguranca, blindagem
 
 ## Relacionamentos
+ <br>
+EXOHUMANO - participa - MISSÃO <br>
+* EXOHUMANO participa de zero ou várias MISSÕES (0,N) <br>
+* MISSÃO tem a participação de um unico EXOHUMANO (1,1) <br>
 
-EXOHUMANO - participa - MISSÃO
-* EXOHUMANO participa de zero ou várias MISSÕES (0,1)
-* MISSÃO tem a participação de um unico EXOHUMANO (1,1)
+EXOHUMANO - possui - DIALOGO <br>
+* EXOHUMANO possui zero ou vários DIALOGOS (0,N) <br>
+* DIALOGO é possuido por um unico EXOHUMANO (1,1) <br>
 
-EXOHUMANO - possui - DIALOGO
-* EXOHUMANO possui zero ou vários DIALOGOS (0,1)
-* DIALOGO é possuido por um unico EXOHUMANO (1,1)
+EXOHUMANO - esta - SALA <br>
+* Varios EXOHUMANOS estão em varias SALAS (N,M) <br>
+* SALA pode estar com zero ou varios EXOHUMANOS (0,N) <br>
 
-EXOHUMANO - esta - SALA
-* Varios EXOHUMANOS estão em varias SALAS (N, M)
-* SALA pode estar com zero ou varios EXOHUMANOS (0,N)
+EXOHUMANO - participa - FACCAO <br>
+* EXOHUMANO participa de uma unica FACÇÃO (1,1) <br>
+* FACÇÃO tem a participação de zero ou vários EXOHUMANOS (0,N) <br>
 
-EXOHUMANO - participa - FACCAO
-* EXOHUMANO participa de uma unica FACÇÃO (1,1)
-* FACÇÃO tem a participação de zero ou vários EXOHUMANOS (0,N)
+NPC - possui - MERCADOCLANDESTINO <br>
+* NPC possui zero ou um MERCADOCLANDESTINO (0,1) <br>
+* MERCADOCLANDESTINO é possuido por um unico NPC (1,1) <br>
 
-NPC - possui - MERCADOCLANDESTINO
-* NPC possui zero ou um MERCADOCLANDESTINO (0,1)
-* MERCADOCLANDESTINO é possuido por um unico NPC (1,1)
+MERCADOCLANDESTINO - possui - CARRO <br>
+* MERCADOCLANDESTINO possui zero ou vários CARROS (0,N) <br>
+* CARRO é possuido por um único MERCADOCLANDESTINO (1,1) <br>
 
-MERCADOCLANDESTINO - possui - CARRO
-* MERCADOCLANDESTINO possui zero ou vários CARROS (0,N)
-* CARRO é possuido por um único MERCADOCLANDESTINO (1,1)
+MERCADOCLANDESTINO - vende - ITEM <br>
+* MERCADOCLANDESTINO vende um ou varios ITENS (1,N) <br>
+* ITEM é vendido por zero ou varios MERCADOCLANDESTINOS (0,N) <br>
 
-MERCADOCLANDESTINO - vende - ITEM
-* MERCADOCLANDESTINO vende um ou varios ITENS (1,N)
-* ITEM é vendido por zero ou varios MERCADOCLANDESTINOS (0,N)
+PLAYER - acessa - MERCADOCLANDESTINO <br>
+* PLAYER acessa zero ou varios MERCADOCLANDESTINOS (0,N) <br>
+* MERCADOCLANDESTINO pode ser acessado por zero ou um unico PLAYER (0,1) <br>
 
-PLAYER - acessa - MERCADOCLANDESTINO
-* PLAYER acessa zero ou varios MERCADOCLANDESTINOS (0,N)
-* MERCADOCLANDESTINO pode ser acessado por zero ou um unico PLAYER (0,1)
+PLAYER - utiliza - CARRO <br>
+* PLAYER utiliza zero ou um CARRO (0,1) <br>
+* CARRO é utilizado por zero ou um PLAYER (0,1) <br>
 
-PLAYER - utiliza - CARRO
-* PLAYER utiliza zero ou um CARRO (0,1)
-* CARRO é utilizado por zero ou um PLAYER (0,1)
+PLAYER - resolve - PUZZLE <br>
+* PLAYER resolve zero ou um PUZZLE (0,1) <br>
+* PUZZLE é resolvido por zero ou um PLAYER (0,1) <br>
 
-PLAYER - resolve - PUZZLE
-* PLAYER resolve zero ou um PUZZLE (0,1)
-* PUZZLE é resolvido por zero ou um PLAYER (0,1)
+CARRO - esta - REGIÃO  <br>
+* CARRO esta em uma única REGIÃO (1,1) <br>
+* REGIÃO pode estar com zero ou vários CARROS (0,N) <br>
 
-CARRO - esta - REGIÃO 
-* CARRO esta em uma única REGIÃO (1,1)
-* REGIÃO pode estar com zero ou vários CARROS (0,N)
+REGIÃO - esta - MAPA <br>
+* REGIÃO esta em um único MAPA (1,1) <br>
+* MAPA pode estar com um ou várias REGIÕES (1,N) <br>
 
-REGIÃO - esta - MAPA
-* REGIÃO esta em um único MAPA (1,1)
-* MAPA pode estar com um ou várias REGIÕES (1,N)
+SALA - esta - REGIÃO <br>
+* SALA esta em uma ou várias REGIÕES (1,N) <br>
+* REGIÃO pode estar com zero ou várias SALAS (0,N) <br>
 
-SALA - esta - REGIÃO
-* SALA esta em uma ou várias REGIÕES (1,N)
-* REGIÃO pode estar com zero ou várias SALAS (0,N)
+SALA - conecta - SALA <br>
+* SALA conecta em uma ou seis SALAS (1,6) <br>
+* SALA é conectada por uma ou seis SALA (1,6) <br>
 
-SALA - conecta - SALA
-* SALA conecta em uma ou seis SALAS (1,6)
-* SALA é conectada por uma ou seis SALA (1,6)
+PUZZLE - esta - MISSÃO <br>
+* PUZZLE esta em zero ou várias MISSÕES (0,N) <br>
+* MISSÃO pode estar com zero ou varios PUZZLES (0,N) <br>
 
-PUZZLE - esta - MISSÃO
-* PUZZLE esta em zero ou várias MISSÕES (0,N)
-* MISSÃO pode estar com zero ou varios PUZZLES (0,N)
+PLAYER - enfrente - INSTANCIAINIMIGO <br>
+* PLAYER enfrenta uma ou várias INSTANCIAINIMIGO (1,N) <br>
+* INSTANCIAINIMIGO é enfrentado por um único PLAYER (1,1) <br>
 
-PLAYER - enfrente - INSTANCIAINIMIGO
-* PLAYER enfrenta uma ou várias INSTANCIAINIMIGO (1,N)
-* INSTANCIAINIMIGO é enfrentado por um único PLAYER (1,1)
+Inimigo - gera - INSTANCIAINIMIGO <br>
+* Inimigo gera uma ou várias InstanciasInimigo (1,N) <br>
+* INSTANCIAINIMIGO é gerado por um único Inimio (1,1) <br>
 
-Inimigo - gera - INSTANCIAINIMIGO
-* Inimigo gera uma ou várias InstanciasInimigo (1,N)
-* INSTANCIAINIMIGO é gerado por um único Inimio (1,1)
+CYBERLUTADOR - possui - MOCHILA <br>
+* CYBERLUTADOR possui uma ou várias MOCHILAS (1,N) <br>
+* MOCHILA é possuída por um único CYBERLUTADOR (1,1) <br>
 
-CYBERLUTADOR - possui - MOCHILA
-* CYBERLUTADOR possui uma ou várias MOCHILAS (1,N)
-* MOCHILA é possuída por um único CYBERLUTADOR (1,1)
+CYBERLUTADOR - utiliza - IMPLANTE  <br>
+* CYBERLUTADOR utiliza zero ou vários IMPLANTES (0,N) <br>
+* IMPLANTE é utilizado por zero ou vários CYBERLUTADOR (0,N) <br>
 
-CYBERLUTADOR - utiliza - IMPLANTE 
-* CYBERLUTADOR utiliza zero ou vários IMPLANTES (0,N)
-* IMPLANTE é utilizado por zero ou vários CYBERLUTADOR (0,N)
+MOCHILA - possui - INSTANCIAITEM <br>
+* MOCHILA possui zero ou várias INSTANCIAITEM (0,N) <br>
+* INSTANCIAITEM é possuída por zero ou várias MOCHILAS (0,N) <br>
 
-MOCHILA - possui - INSTANCIAITEM
-* MOCHILA possui zero ou várias INSTANCIAITEM (0,N)
-* INSTANCIAITEM é possuída por zero ou várias MOCHILAS (0,N)
+ITEM - gera - INSTANCIAITEM <br>
+* ITEM gera um ou várias INSTANCIAITEM (1,N) <br>
+* INSTANCIAITEM é gerado por um único ITEM (1,1) <br>
 
-ITEM - gera - INSTANCIAITEM
-* ITEM gera um ou várias INSTANCIAITEM (1,N)
-* INSTANCIAITEM é gerado por um único ITEM (1,1)
-
-IMPLANTE - possui - COMPONENTE
-* IMPLANTE possui um ou vários COMPONENTES (1,N)
-* COMPONENTE é possuído por um ou vários IMPLANTES (1,N)
+IMPLANTE - possui - COMPONENTE <br>
+* IMPLANTE possui um ou vários COMPONENTES (1,N) <br>
+* COMPONENTE é possuído por um ou vários IMPLANTES (1,N) <br>
 
 ## Histórico de versões
 
@@ -156,3 +169,4 @@ IMPLANTE - possui - COMPONENTE
 | 1.0 | 23/11/2024 | Criação do MER | [João Vitor Santos](https://github.com/Jauzimm) |
 | 1.1 | 24/11/2024 | Adição dos Relacionamentos no MER | [João Vitor Santos](https://github.com/Jauzimm) |
 | 1.2 | 25/11/2024 | Adição dos atributos das entidades | [Charles Serafim Morais](https://github.com/charles-serafim) |
+| 1.3 | 25/11/2024 | Correções, adição da introdução | [Charles Serafim Morais](https://github.com/charles-serafim) |
