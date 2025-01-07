@@ -1,0 +1,32 @@
+services:
+  db:
+    image: postgres:13
+    container_name: postgres_db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: cyberbase
+    ports:
+      - "5437:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    networks:
+      - cybernet
+
+  app:
+    build: .
+    container_name: cyberpunk
+    volumes:
+      - .:/app
+    networks:
+      - cybernet
+    depends_on:
+      - db
+    command: node src/index.js
+
+networks:
+  cybernet:
+    driver: bridge
+
+volumes:
+  pg_data:
