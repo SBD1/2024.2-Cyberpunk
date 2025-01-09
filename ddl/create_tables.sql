@@ -14,6 +14,13 @@ CREATE SEQUENCE componente_id_seq START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE faccao_id_seq START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE mercado_clandestino_id_seq START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE mochila_id_seq START WITH 1 INCREMENT BY 1;
+CREATE SEQUENCE carro_id_seq START WITH 1 INCREMENT BY 1;
+CREATE SEQUENCE player_id_seq START WITH 1 INCREMENT BY 1;
+CREATE SEQUENCE inimigo_id_seq START WITH 1 INCREMENT BY 1;
+CREATE SEQUENCE instancia_inimigo_id_seq START WITH 1 INCREMENT BY 1;
+CREATE SEQUENCE netrunners_id_seq START WITH 1 INCREMENT BY 1;
+CREATE SEQUENCE codekeepers_id_seq START WITH 1 INCREMENT BY 1;
+CREATE SEQUENCE voidwalkers_id_seq START WITH 1 INCREMENT BY 1;
 
 
 -- Agora criando as tabelas que dependem das sequências
@@ -148,4 +155,69 @@ CREATE TABLE Mochila (
   fk_item INT NOT NULL,
   FOREIGN KEY (fk_player) REFERENCES ExoHumano (idExoHumano),
   FOREIGN KEY (fk_item) REFERENCES Item (idItem)
+);
+
+CREATE TABLE Carro(
+  idCarro INT PRIMARY KEY DEFAULT nextval('carro_id_seq'),
+  capacidade INT NOT NULL,
+  velocidade INT NOT NULL,
+  combustivel INT NOT NULL,
+  preco INT NOT NULL,
+  conservacao INT NOT NULL,
+  nivelSeguranca INT NOT NULL,
+  blindagem INT NOT NULL,
+  fk_regiao INT NOT NULL,
+  fk_mercado_clandestino INT NOT NULL,
+  FOREIGN KEY (fk_regiao) REFERENCES Mapa (idRegiao),
+  FOREIGN KEY (fk_mercado_clandestino) REFERENCES MercadoClandestino (idMercadoClandestino),
+);
+
+CREATE TABLE Player(
+  idPlayer INT PRIMARY KEY DEFAULT nextval('player_id_seq'),
+  inteligencia INT NOT NULL,
+  resistencia INT NOT NULL,
+  furtividade INT NOT NULL,
+  percepcao INT NOT NULL,
+  vida INT NOT NULL,
+  velocidade INT NOT NULL,
+  fk_cyberLutador INT NOT NULL,
+  FOREIGN KEY (fk_cyberLutador) REFERENCES CyberLutador (idCyberLutador)
+);
+
+CREATE TABLE Inimigo(
+  idInimigo INT PRIMARY KEY DEFAULT nextval('inimigo_id_seq'),
+  inteligencia INT NOT NULL,
+  resistencia INT NOT NULL,
+  furtividade INT NOT NULL,
+  percepcao INT NOT NULL,
+  vida INT NOT NULL,
+  velocidade INT NOT NULL,
+  fk_cyberLutador INT NOT NULL,
+  FOREIGN KEY (fk_cyberLutador) REFERENCES CyberLutador (idCyberLutador)
+);
+
+CREATE TABLE InstanciaInimigo (
+  idInstanciaInimigo INT PRIMARY KEY DEFAULT nextval('instancia_inimigo_id_seq'),
+  fk_inimigo INT NOT NULL,
+  fk_player INT NOT NULL,
+  FOREIGN KEY (fk_inimigo) REFERENCES Inimigo (idInimigo),
+  FOREIGN KEY (fk_player) REFERENCES Player (idPlayer)
+);
+
+CREATE TABLE NetRunners (
+  idNetRunners INT PRIMARY KEY DEFAULT nextval('netrunners_id_seq'),
+  fk_faccao INT NOT NULL,
+  FOREIGN KEY (fk_faccao) REFERENCES Faccao (idFaccao)
+);
+
+CREATE TABLE CodeKeepers (
+  idCodeKeepers INT PRIMARY KEY DEFAULT nextval('codekeepers_id_seq'),
+  fk_faccao INT NOT NULL,
+  FOREIGN KEY (fk_faccao) REFERENCES Faccao (idFaccao)
+);
+
+CREATE TABLE VoidWalkers (
+  idVoidWalkers INT PRIMARY KEY DEFAULT nextval('voidwalkers_id_seq'),
+  fk_faccao INT NOT NULL,
+  FOREIGN KEY (fk_faccao) REFERENCES Faccao (idFaccao)
 );
