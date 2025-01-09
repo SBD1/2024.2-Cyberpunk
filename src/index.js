@@ -26,20 +26,18 @@ async function executeSQLFile(filePath) {
 }
 
 async function init() {
+  console.log('Resetando banco de dados...');
+  await executeSQLFile(path.join(__dirname, '../ddl/reset_db.sql'));
+
   console.log('Criando tabelas...');
   await executeSQLFile(path.join(__dirname, '../ddl/create_tables.sql'));
 
-  console.log('Inserindo usuário de exemplo...');
-  try {
-    const result = await pool.query(
-      'INSERT INTO users (name, email) VALUES ($1, $2) RETURNING *',
-      ['John Doe', 'john.doe@example.com']
-    );
-    console.log('Usuário inserido:', result.rows[0]);
-  } catch (error) {
-    console.error('Erro durante a inicialização:', error);
-  }
+  console.log('Inserindo dados...');
+  await executeSQLFile(path.join(__dirname, '../dml/insert_data.sql'));
+
+  console.log('Dados inseridos com sucesso.');
 }
+
 
 init()
   .then(() => {
