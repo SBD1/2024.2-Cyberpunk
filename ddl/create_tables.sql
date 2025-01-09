@@ -73,10 +73,3 @@ CREATE TABLE Dialogo (
   fk_exohumano INT NOT NULL,
   FOREIGN KEY (fk_exohumano) REFERENCES ExoHumano (idExoHumano)
 );
-
-CREATE TABLE IF NOT EXISTS post (
-  id SERIAL PRIMARY KEY,
-  name VARCHAR(100) NOT NULL,
-  email VARCHAR(100) NOT NULL UNIQUE
-);
-
