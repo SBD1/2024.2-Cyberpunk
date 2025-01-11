@@ -21,7 +21,10 @@ CREATE SEQUENCE instancia_inimigo_id_seq START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE netrunners_id_seq START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE codekeepers_id_seq START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE voidwalkers_id_seq START WITH 1 INCREMENT BY 1;
-
+CREATE SEQUENCE implante_id_seq START WITH 1 INCREMENT BY 1;
+CREATE SEQUENCE VisaoCibernetica START WITH 1 INCREMENT BY 1;
+CREATE SEQUENCE BracoRobotico START WITH 1 INCREMENT BY 1;
+CREATE SEQUENCE CapaceteNeural START WITH 1 INCREMENT BY 1;
 
 -- Agora criando as tabelas que dependem das sequências
 CREATE TABLE Mapa(
@@ -220,4 +223,35 @@ CREATE TABLE VoidWalkers (
   idVoidWalkers INT PRIMARY KEY DEFAULT nextval('voidwalkers_id_seq'),
   fk_faccao INT NOT NULL,
   FOREIGN KEY (fk_faccao) REFERENCES Faccao (idFaccao)
+);
+
+CREATE TABLE Implante (
+  idImplante INT PRIMARY KEY DEFAULT nextval('implante_id_seq'),
+  nomeImplante VARCHAR(50) NOT NULL,
+  tipo VARCHAR(50) NOT NULL,
+  localInstalacao VARCHAR(50) NOT NULL,
+  upgrade BOOLEAN NOT NULL
+  fk_cyberlutador INT NOT NULL,
+  FOREIGN KEY (fk_cyberlutador) REFERENCES CyberLutador (idCyberLadder)
+);
+
+CREATE TABLE VisaoCibernetica (
+  fk_implante INT PRIMARY KEY,
+  aumentaFurtividade BOOLEAN NOT NULL,
+  aumentaPercepcao BOOLEAN NOT NULL,
+  FOREIGN KEY (fk_implante) REFERENCES Implante (idImplante) ON DELETE CASCADE
+);
+
+CREATE TABLE BracoRobotico (
+  fk_implante INT PRIMARY KEY,
+  aumentaVida BOOLEAN NOT NULL,
+  aumentaResistencia BOOLEAN NOT NULL,
+  FOREIGN KEY (fk_implante) REFERENCES Implante (idImplante) ON DELETE CASCADE
+);
+
+CREATE TABLE CapaceteNeural (
+  fk_implante INT PRIMARY KEY,
+  aumentaVelocidade BOOLEAN NOT NULL,
+  aumentaInteligencia BOOLEAN NOT NULL,
+  FOREIGN KEY (fk_implante) REFERENCES Implante (idImplante) ON DELETE CASCADE
 );
