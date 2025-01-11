@@ -45,11 +45,18 @@ nav:
   - Sobre: index.md
   - Apresentações: apresentacoes.md
   - Módulo 1:
-    - Modelo Entidade-Relacionamento: modulo1/MER_Cyberpunk.md
-    - Diagrama Entidade-Relacionamento: modulo1/DER_Cyberpunk.md
-    - Modelo Relacional: modulo1/Modelo_Relacional.md
-    - Dicionário de Dados: modulo1/Dicionario.md
-
+    - Modelo Entidade-Relacionamento:
+      - V1: modulo1/MER_Cyberpunk.md
+    - Diagrama Entidade-Relacionamento:
+      - V1: modulo1/DER_Cyberpunk.md
+    - Modelo Relacional:
+      - V1: modulo1/Modelo_Relacional.md
+    - Dicionário de Dados:
+      - V1: modulo1/Dicionario.md
+  - Módulo 2: 
+      - DDL: modulo2/ddl.md
+      - DML: modulo2/dml.md
+      - DQL: modulo2/dql.md
 markdown_extensions:
   - admonition
   - codehilite #formatar coodigo
