@@ -5,8 +5,8 @@
   -- INSERT INTO users (name, email) VALUES ('Alice Wonderland', 'alice.wonderland@example.com');
 
 -- Regiões
-INSERT INTO Regiao (idRegiao, nomeRegiao, fk_mapa) 
-  VALUES (1, 'Regiao Inicial', 1);
+INSERT INTO Regiao (idRegiao, nomeRegiao) 
+  VALUES (1, 'Regiao Inicial');
 
 -- Salas
 INSERT INTO Sala (idSala, nomeSala, fk_regiao)
@@ -36,15 +36,24 @@ INSERT INTO ExoHumano (idExoHumano, nome, fk_sala)
   VALUES (1,'ExoHumano Inicial', 1);
 
 -- Missões
-INSERT INTO Missao (idMissao, nomeMissao, recompensa, itensNecessario, objetivo, fk_sala, fk_exohumano)
-  VALUES (1, 'Missao Inicial', 100, NULL, 'Resultado da soma', 1, 1),
-         (2, 'Decodificação inicial', 100, NULL, 'Digitar "hello world"', 2, 1);
+INSERT INTO Missao (idMissao, nomeMissao, descricao, fk_sala, fk_cyberlutador)
+  VALUES (1, 'Missao Inicial', 'Descricao 1', 1, 1),
+         (2, 'Decodificação inicial', 'Descricao 2', 2, 1);
+
+-- Recompensas
+
+INSERT INTO Recompensa (idRecompensa, dinheiro, item, fk_instancia_inimigo, fk_cyberlutador)
+  VALUES (1, 100, 'Item Recompensa Inicial', 1, 1);
+
+INSERT INTO RecompensaMissao (idRecompensaMissao, dinheiro, item, fk_sala, fk_cyberLutador)
+  VALUES (1, 100, 'Item Recompensa Missao Inicial', 1, 1);
+
 
 -- Puzzles
 INSERT INTO Puzzle (idPuzzlle, nomePuzzle, dificuldade, fk_missao)
   VALUES (1, 'Puzzle Inicial', 'Facil', 1);
 
--- Subclasses
+    -- Subclasses
 INSERT INTO Matematico (fk_puzzle, expressao)
   VALUES (1, '2 + 2 = ?');
 
@@ -52,7 +61,7 @@ INSERT INTO Decodificar (fk_puzzle, codigo)
   VALUES (2, 'A = 1, B = 2, C = 3, D = 4, E = 5, F = 6, G = 7, H = 8, I = 9, J = 10, K = 11, L = 12, M = 13, N = 14, O = 15, P = 16, Q = 17, R = 18, S = 19, T = 20, U = 21, V = 22, W = 23, X = 24, Y = 25, Z = 26');
 
 -- Dialogos
-INSERT INTO Dialogo (idDialogo, nomeDialogo, fk_exohumano)
+INSERT INTO Dialogo (idDialogo, nomeDialogo, fk_npc)
   VALUES ('Olá, bem vindo ao jogo!', 1),
          ('Você está na sala 1', 1),
          ('Você está na sala 2', 2),
@@ -77,8 +86,8 @@ INSERT INTO Dialogo (idDialogo, nomeDialogo, fk_exohumano)
 
 -- CyberLutador
 
-INSERT INTO CyberLutador (idCyberLutador, inteligencia, resistencia, furtividade, percepcao, vida, velocidade, fk_player, fk_inimigo)
-  VALUES (1, 10, 10, 10, 10, 100, 10, player, inimigo);
+INSERT INTO CyberLutador (idCyber, inteligencia, resistencia, furtividade, percepcao, vida, velocidade, forca)
+  VALUES (1, 10, 10, 10, 10, 100, 10, 10);
 
 UPDATE CyberLutador
   SET inteligencia = inteligencia + num,
@@ -86,8 +95,9 @@ UPDATE CyberLutador
       furtividade = furtividade + num,
       percepcao = percepcao + num,
       vida = vida + num,
-      velocidade = velocidade + num
-  WHERE idCyberLutador = 1;
+      velocidade = velocidade + num,
+      forca = forca + num
+  WHERE idCyber = 1;
 
 -- Item
 INSERT INTO Item (idItem, nomeItem, descricao, valor)
@@ -102,59 +112,56 @@ DELETE FROM InstanciaItem
 
 -- NPCs
 
-INSERT INTO NPC (idNPC, nomeNPC, fk_sala)
-  VALUES (1, 'NPC Inicial', 1);
+INSERT INTO NPC (idNPC, nomeNPC, descricao, fk_sala)
+  VALUES (1, 'NPC Inicial', 'Descricao npc 1', 1);
 
--- Componentes
-
-INSERT INTO Componente (idComponente, nomeComponente, tipo)
-  VALUES (1, 'Componente Inicial', 'bracoRobotico');
+INSERT INTO Mentor (fk_npc, aumentaInteligencia, aumentaFurtividade, aumentaPercepcao)
+  VALUES (1, 10, 10, 10);
 
 -- Faccao
 
-INSERT INTO Faccao (idFaccao, nomeFaccao, ideologia, tecnologia, territorio, forcaMilitar, especialidade)
-  VALUES (1, 'Faccao Inicial', 'Ideologia de teste', 'Tecnologia de teste', 'Territorio de teste', 100, 'Especialidade de teste'),
-         (2, 'NetRunners', 'Ideologia NetRunners', 'Tecnologia NetRunners', 'Territorio NetRunners', 100, 'Especialidade NetRunners'),
-         (3, 'CodeKeepers', 'Ideologia CodeKeepers', 'Tecnologia CodeKeepers', 'Territorio CodeKeepers', 100, 'Especialidade CodeKeepers'),
-         (4, 'VoidWalkers', 'Ideologia VoidWalkers', 'Tecnologia VoidWalkers', 'Territorio VoidWalkers', 100, 'Especialidade VoidWalkers');
+INSERT INTO Faccao (idFaccao, fk_cyberlutador, nomeFaccao, ideologia)
+  VALUES (1, 1, 'Faccao Teste', 'Ideologia de teste'),
+         (2, 2, 'NetRunners', 'Ideologia NetRunners'),
+         (3, 3, 'CodeKeepers', 'Ideologia CodeKeepers'),
+         (4, 4, 'VoidWalkers', 'Ideologia VoidWalkers');
+
+INSERT INTO NetRunners (idNetRunners, fk_faccao, aumentaInte, aumentaPercep)
+  VALUES (1, 1, 10, 10);
+
+INSERT INTO CodeKeepers (idCodeKeepers, fk_faccao, aumentaVelo, aumentaResis)
+  VALUES (2, 2, 10, 10);
+
+-----INSERT INTO VoidWalkers (idVoidWalkers, fk_faccao, aumentaVida, aumentaForca)
+-----  VALUES (3, 3, 10, 10);
 
 
 -- MercadoClandestino
 
-INSERT INTO MercadoClandestino (idMercadoClandestino, nomeMercado, produtoFornecido, fk_sala)
-  VALUES (1, 'Mercado Inicial', 'Produto de teste', 1);
+INSERT INTO MercadoClandestino (idMercadoClandestino, nomeMercado, desccricao, fk_sala)
+  VALUES (1, 'Mercado Inicial', 'Descricao teste', 1);
 
 -- Mochilas
 
-INSERT INTO Mochila (idMochila, capacidade, fk_player, fk_item)
+INSERT INTO Mochila (idMochila, capacidade, fk_cyberlutador, fk_instanciaitem)
   VALUES (1, 50, 1, 1);
 
 -- Carros
 
-INSERT INTO Carro (idCarro, capacidade, velocidade, combustivel, preco, conservacao, nivelSeguranca, blindagem, fk_regiao, fk_mercado_clandestino)
-  VALUES (1, 50, 100, 100, 100, 100, 100, 100, 1, 1);
-
--- Player 
-
-INSERT INTO Player (idPlayer, inteligencia, resistencia, furtividade, percepcao, vida, velocidade, fk_cyberLutador)
-  VALUES (1, 10, 10, 10, 10, 100, 10, 1);
+INSERT INTO Carro (idCarro, combustivel, fk_regiao)
+  VALUES (1, 50, 100, 1);
 
 -- Inimigos
 
-INSERT INTO Inimigo (idInimigo, inteligencia, resistencia, furtividade, percepcao, vida, velocidade, fk_cyberLutador)
-  VALUES (1, 10, 10, 10, 10, 100, 10, 1);
+INSERT INTO Inimigo (qtdDano, vida, fk_npc)
+  VALUES (10, 100, 1);
 
-
-INSERT INTO InstanciaInimigo (idInstanciaInimigo, fk_inimigo, fk_player)
-  VALUES (1, 1, 1);
+INSERT INTO InstanciaInimigo (idInstanciaInimigo, fk_inimigo)
+  VALUES (1, 1);
 
 UPDATE InstanciaInimigo
-  SET inteligencia = inteligencia + num,
-      resistencia = resistencia + num,
-      furtividade = furtividade + num,
-      percepcao = percepcao + num,
-      vida = vida + num,
-      velocidade = velocidade + num
+  SET qtdDano = qtdDano + num,
+      vida = vida + num
   WHERE idInstanciaInimigo = 1;
 
 DELETE InstanciaInimigo
@@ -163,14 +170,5 @@ DELETE InstanciaInimigo
 
 -- Implantes
 
-INSERT INTO Implante (idImplante, nomeImplante, tipo, localInstalacao, upgrade, fk_cyberLutador)
-  VALUES (1, 'Implante Inicial', 'Implante de teste', 'Local de teste', 1, 1);
-
-INSERT INTO VisaoCibernetica (fk_implante, aumentaFurtividade, aumentaPercepcao)
-  VALUES (1, 10, 10);
-
-INSERT INTO BracoRobotico (fk_implante, aumentaVida, aumentaResistencia)
-  VALUES (1, 10, 10);
-
-INSERT INTO CapaceteNeural (fk_implante, aumentaVelocidade, aumentaInteligencia)
-  VALUES (1, 10, 10);
+INSERT INTO Implante (idImplante, nomeImplante, tipo, fk_cyberLutador)
+  VALUES (1, 'Implante Inicial', 'Implante de teste', 1);
