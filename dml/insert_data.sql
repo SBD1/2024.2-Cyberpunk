@@ -1,9 +1,3 @@
-  -- Arquivo: ddl/insert_data.sql
-
-  -- Exemplo
-  -- INSERT INTO users (name, email) VALUES ('John Doe', 'john.doe@example.com');
-  -- INSERT INTO users (name, email) VALUES ('Alice Wonderland', 'alice.wonderland@example.com');
-
 -- Regiões
 INSERT INTO Regiao (idRegiao, nomeRegiao) 
   VALUES (1, 'Regiao Inicial');
