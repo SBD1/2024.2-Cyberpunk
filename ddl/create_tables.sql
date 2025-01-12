@@ -58,7 +58,8 @@ CREATE TABLE IF NOT EXISTS NPC (
 CREATE TABLE IF NOT EXISTS Missao (
   idMissao INT PRIMARY KEY DEFAULT nextval('missao_id_seq'),
   nomeMissao VARCHAR(50) NOT NULL,
-  descricao VARCHAR(255) NOT NULL,
+  objetivo VARCHAR(255) NOT NULL,
+  progresso VARCHAR(50) NOT NULL,
   fk_sala INT NOT NULL,
   fk_cyberlutador INT NOT NULL,
   FOREIGN KEY (fk_sala) REFERENCES Sala (idSala) ON DELETE CASCADE, 
@@ -69,6 +70,8 @@ CREATE TABLE IF NOT EXISTS Puzzle (
   idPuzzle INT PRIMARY KEY DEFAULT nextval('puzzle_id_seq'),
   nomePuzzle VARCHAR(30) NOT NULL,
   dificuldade VARCHAR(10) NOT NULL,
+  resposta VARCHAR(50) NOT NULL,
+  estado VARCHAR(50) NOT NULL,
   fk_missao INT NOT NULL,
   FOREIGN KEY (fk_missao) REFERENCES Missao (idMissao) ON DELETE CASCADE
 );

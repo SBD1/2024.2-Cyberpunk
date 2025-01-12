@@ -1,7 +1,5 @@
   -- Arquivo: dql/queries.sql
 
---Charles
-
 -- Obter as missões em uma sala específica
 SELECT *
 FROM Missao
