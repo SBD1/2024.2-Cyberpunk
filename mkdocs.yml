@@ -49,6 +49,7 @@ nav:
       - V1: modulo1/MER_Cyberpunk.md
     - Diagrama Entidade-Relacionamento:
       - V1: modulo1/DER_Cyberpunk.md
+      - V2: modulo1/DER-v2.md
     - Modelo Relacional:
       - V1: modulo1/Modelo_Relacional.md
     - Dicionário de Dados:
