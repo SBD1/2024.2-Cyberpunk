@@ -116,7 +116,11 @@ CREATE TABLE IF NOT EXISTS Item (
 CREATE TABLE IF NOT EXISTS InstanciaItem (
   idInstanciaItem INT PRIMARY KEY DEFAULT nextval('instancia_item_id_seq'),
   fk_item INT NOT NULL,
-  FOREIGN KEY (fk_item) REFERENCES Item (idItem) ON DELETE CASCADE
+  fk_mochila INT,
+  fk_mercado_clandestino INT,
+  FOREIGN KEY (fk_item) REFERENCES Item (idItem),
+  FOREIGN KEY (fk_mochila) REFERENCES Mochila (idMochila),
+  FOREIGN KEY (fk_mercado_clandestino) REFERENCES MercadoClandestino (idMercadoClandestino)
 );
 
 
@@ -202,7 +206,9 @@ CREATE TABLE IF NOT EXISTS Implante (
   nomeImplante VARCHAR(50) NOT NULL,
   tipo VARCHAR(50) NOT NULL,
   fk_item INT NOT NULL,
-  FOREIGN KEY (fk_item) REFERENCES Item (idItem) ON DELETE CASCADE
+  fk_cyberlutador INT NOT NULL,
+  FOREIGN KEY (fk_item) REFERENCES Item (idItem) ON DELETE CASCADE,
+  FOREIGN KEY (fk_cyberlutador) REFERENCES CyberLutador (idCyberLutador)
 );
 
 CREATE TABLE IF NOT EXISTS Biochip (
