@@ -212,4 +212,4 @@ GROUP BY
 | Versão |  Data  | Descrição | Autor | 
 |:------:|:------:|:---------:|------:|
 | 1.0 | 06/01/2024 | Criação do Documento| [Gabrielly Assunção](https://github.com/GabriellyAssuncao) |
-| 1.1 |  13/01/2025 | Adicionando introdução e script explicado do DML| [Maria Eduarda Marques](https://github.com/EduardaSMarques) e [Charles Serafim Morais](https://github.com/charles-serafim) |
+| 1.1 |  13/01/2025 | Adicionando introdução e script explicado do DQL| [Maria Eduarda Marques](https://github.com/EduardaSMarques) e [Charles Serafim Morais](https://github.com/charles-serafim) |
