@@ -126,9 +126,6 @@ INSERT INTO NetRunners (idNetRunners, fk_faccao, aumentaInte, aumentaPercep)
 INSERT INTO CodeKeepers (idCodeKeepers, fk_faccao, aumentaVelo, aumentaResis)
   VALUES (2, 2, 10, 10);
 
------INSERT INTO VoidWalkers (idVoidWalkers, fk_faccao, aumentaVida, aumentaForca)
------  VALUES (3, 3, 10, 10);
-
 
 -- MercadoClandestino
 
