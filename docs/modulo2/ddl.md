@@ -13,11 +13,8 @@ Data Definition Language (DDL) é um elemento fundamental na gestão de bancos d
 Segundo Silberschatz, Korth e Sudarshan (2011), a DDL desempenha um papel fundamental na definição tanto do layout físico quanto da organização lógica dos dados. Comandos como CREATE, ALTER e DROP são empregados para estabelecer a arquitetura do banco de dados, que serve como alicerce para as operações subsequentes de manipulação de dados (DML). Além de definir a estrutura do banco de dados, a DDL exerce uma influência direta no desempenho e na eficiência das operações de consulta e manipulação de dados, pois possibilita a otimização da organização interna dos dados.
 </p>
 
-
-??? Tabelas
-
-    ```sql
-    CREATE TABLE IF NOT EXISTS Regiao (
+```sql
+  CREATE TABLE IF NOT EXISTS Regiao (
       idRegiao INT PRIMARY KEY DEFAULT nextval('regiao_id_seq'),
       nomeRegiao VARCHAR(50) NOT NULL
     );
@@ -228,7 +225,7 @@ Segundo Silberschatz, Korth e Sudarshan (2011), a DDL desempenha um papel fundam
       aumentaResis INT NOT NULL,
       FOREIGN KEY (fk_implante) REFERENCES Implante (idImplante) ON DELETE CASCADE
     );
-    ```
+```
 
 
 # Referência Bibliográfica
