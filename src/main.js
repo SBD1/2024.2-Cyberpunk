@@ -1,15 +1,41 @@
-class Regiao {
-  constructor(nome, salas = []) {
-    this.nome = nome;
-    this.salas = salas;
+const readline = require('readline');
+const { init, getSalas, getCyberLutadores, adicionarCyberLutador } = require('./index'); // Importa a função getSalas
+
+let cyberlutadores = [];
+
+// Cria a interface readline
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout
+});
+
+async function listarCyberLutadores() {
+  try {
+    cyberlutadores = await getCyberLutadores();
+    if (!cyberlutadores) {
+      console.log('Não há cyberlutadores criados');
+    }
+    else {
+      console.log('Cyber Lutadores:')
+      cyberlutadores.forEach(cyberlutador => {
+        console.log(`ID: ${cyberlutador.idCyberLutador}, Nome: ${cyberlutador.nomeCyberLutador}, Sala atual: ${cyberlutador.fk_sala_atual}`);
+      });
+    }
+  } catch (error) {
+    console.error('Erro ao buscar cyberlutadores:', error);
   }
 }
 
-class Sala {
-  constructor(nome, descricao = '', conexoes = []) {
-    this.nome = nome;
-    this.descricao = descricao;
-    this.conexoes = conexoes;
+async function listarSalas() {
+  try {
+    const salas = await getSalas(); // Chama a função para obter as salas
+    console.log('Informações das Salas:');
+    salas.forEach(sala => {
+      // console.log(sala);
+      console.log(`ID: ${sala.idsala}, Nome: ${sala.nomesala}, Norte: ${sala.norte}, Sul: ${sala.sul}, Leste: ${sala.leste}, Oeste: ${sala.oeste}`);
+    });
+  } catch (error) {
+    console.error('Erro ao exibir as salas:', error);
   }
 }
 
@@ -19,24 +45,43 @@ class CyberLutador {
     this.salaAtual = salaAtual;
   }
 
-  andar(novaSala) {
-    if (this.salaAtual.conexoes.includes(novaSala)) {
+  // andar(novaSala) {
+  //   if (this.salaAtual.conexoes.includes(novaSala)) {
+  //     this.salaAtual = novaSala;
+  //     console.log(`Você andou para a sala: ${novaSala.nome}`);
+  //   }
+  // }
+  mover(direcao) {
+    const novaSala = this.salaAtual.conexoes[direcao];
+    if (novaSala) {
       this.salaAtual = novaSala;
       console.log(`Você andou para a sala: ${novaSala.nome}`);
+    } else {
+      console.log(`Não é possível ir para o ${direcao}.`);
     }
   }
 }
 
-const sala1 = new Sala("Sala 1", "Laboratório");
-const sala2 = new Sala("Sala 2", "Ruínas");
-const sala3 = new Sala("Sala 3", "Distrito Neon");
-sala1.conexoes.push(sala2);
-sala2.conexoes.push(sala1, sala3);
-sala3.conexoes.push(sala2);
+class Sala {
+  constructor(nome, norte, sul, leste, oeste = {}) {
+    this.nome = nome;
+    // Conexões: norte, sul, leste, oeste
+    this.norte = norte || null;
+    this.sul = sul || null;
+    this.leste = leste || null;
+    this.oeste = oeste || null;
+  }
 
-const regiao = new Regiao("Região Central", [sala1, sala2, sala3]);
+  // Método para definir conexões
+  definirConexoes(norte, sul, leste, oeste) {
+    this.norte = { ...this.norte, norte };
+    this.sul = { ...this.sul, sul };
+    this.leste = { ...this.leste, leste };
+    this.oeste = { ...this.oeste, oeste };
+  }
+}
 
-function iniciarJogo() {
+async function iniciarJogo() {
   let personagem = null;
 
   const prompt = require('prompt-sync')();
@@ -44,17 +89,23 @@ function iniciarJogo() {
 
   do {
     console.log("\n=== Bem-vindo ===");
-    console.log("1. Criar um personagem");
-    console.log("2. Ver informações do personagem");
-    console.log("3. Mover para outra sala");
-    console.log("4. Sair do jogo");
+    console.log("1. Selecionar CyberLutador");
+    console.log("2. Criar um CyberLutador");
+    console.log("3. Ver informações do CyberLutador");
+    console.log("4. Mover para outra sala");
+    console.log("5. Sair do jogo");
     opcao = prompt("Escolha uma opção: ");
 
     switch (opcao) {
       case "1":
-        if (personagem) {
-          console.log("Você já criou um personagem.");
+        if (!cyberlutadores || cyberlutadores.length <= 0) {
+          await listarCyberLutadores();
+          console.log("Não há cyberlutadores criados.");
         } else {
+          const escolha = parseInt(prompt("Escolha um cyberlutador"), 10) - 1;
+          if (escolha >= 0 && escolha < cyberlutadores.length) {
+            personagem = new CyberLutador(cyberlutadores[escolha].nomeCyberLutador, cyberlutadores[escolha].fk_sala_atual)
+          }
           const nome = prompt("Digite o nome do seu CyberLutador: ");
           personagem = new CyberLutador(nome, sala1);
           console.log(`Personagem ${nome} criado! Você está na sala: ${sala1.nome}`);
@@ -62,14 +113,27 @@ function iniciarJogo() {
         break;
 
       case "2":
-        if (personagem) {
-          console.log(`\n=== Informações do personagem ===`);
-          console.log(`Nome: ${personagem.nome}`);
-          console.log(`Sala atual: ${personagem.salaAtual.nome}`);
-          console.log(`Descrição: ${personagem.salaAtual.descricao}`);
-        } else {
-          console.log("Você ainda não criou um personagem.");
+        const nomeCyberLutador = prompt("Digite o nome do CyberLutador: ");
+        const fkSalaAtual = 1;
+
+        try {
+          const novoCyberLutador = await adicionarCyberLutador(nomeCyberLutador, fkSalaAtual);
+          console.log("\n=== CyberLutador Criado ===");
+          console.log(`ID: ${novoCyberLutador.idCyberLutador}`);
+          console.log(`Nome: ${novoCyberLutador.nomeCyberLutador}`);
+          console.log(`Sala Inicial: ${novoCyberLutador.fk_sala_atual}`);
+          console.log(`Atributos: 
+            Inteligência: ${novoCyberLutador.inteligencia},
+            Resistência: ${novoCyberLutador.resistencia},
+            Furtividade: ${novoCyberLutador.furtividade},
+            Percepção: ${novoCyberLutador.percepcao},
+            Vida: ${novoCyberLutador.vida},
+            Velocidade: ${novoCyberLutador.velocidade},
+            Força: ${novoCyberLutador.forca}`);
+        } catch (error) {
+          console.error("Erro ao criar o CyberLutador:", error.message);
         }
+
         break;
 
       case "3":
@@ -90,13 +154,17 @@ function iniciarJogo() {
         break;
 
       case "4":
-        console.log("Saindo do jogo. Até a próxima!");
+
+        break;
+
+      case "5":
+
         break;
 
       default:
-        console.log("Opção inválida. Tente novamente.");
     }
-  } while (opcao !== "4");
+  } while (opcao !== "5");
 }
 
+// Inicia o menu
 iniciarJogo();
