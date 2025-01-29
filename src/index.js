@@ -4,7 +4,7 @@ const path = require('path');
 const fs = require('fs');
 
 const app = express();
-const port = 3000;
+const initialPort = 3000;
 
 const pool = new Pool({
   user: 'postgres',
@@ -24,6 +24,7 @@ async function executeSQLFile(filePath) {
     throw error;
   }
 }
+
 async function waitForDatabase() {
   let retries = 10;
   while (retries > 0) {
@@ -76,9 +77,11 @@ async function adicionarSala(nomeSala, fkRegiao, norte = null, sul = null, leste
 async function getCyberLutadores() {
   try {
     const res = await pool.query(`
-      SELECT idCyberLutador, nomeCyberLutador
+      SELECT c.*, s.nomeSala
       FROM CyberLutador c
+      LEFT JOIN Sala s ON c.fk_sala_atual = s.idSala
     `);
+    console.log("getcyber", res.rows);
     return res.rows;
   } catch (error) {
     console.error('Erro ao consultar os cyberlutadores:', error);
@@ -114,9 +117,9 @@ async function adicionarCyberLutador(nomeCyberLutador, fkSalaAtual) {
 async function init() {
   try {
     await waitForDatabase();
-    console.log('Resetando banco de dados...');
-    await executeSQLFile(path.join(__dirname, '../ddl/reset_db.sql'));
-
+    // console.log('Resetando banco de dados...');
+    // await executeSQLFile(path.join(__dirname, '../ddl/reset_db.sql'));
+    
     console.log('Criando tabelas...');
     await executeSQLFile(path.join(__dirname, '../ddl/create_tables.sql'));
 
@@ -130,9 +133,26 @@ async function init() {
   }
 }
 
+async function startServer(port) {
+  return new Promise((resolve, reject) => {
+    app.listen(port, () => {
+      console.log(`Servidor rodando na porta ${port}`);
+      resolve();
+    }).on('error', (err) => {
+      if (err.code === 'EADDRINUSE') {
+        console.log(`Porta ${port} em uso, tentando a próxima...`);
+        startServer(port + 1).then(resolve).catch(reject);
+      } else {
+        reject(err);
+      }
+    });
+  });
+}
+
 init().then(() => {
-  app.listen(port, () => {
-    console.log(`Servidor rodando na porta ${port}`);
+  startServer(initialPort).catch((err) => {
+    console.error('Erro ao iniciar o servidor:', err);
+    process.exit(1);
   });
 });
 
