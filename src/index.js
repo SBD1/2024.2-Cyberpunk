@@ -178,6 +178,9 @@ async function init() {
     console.log('Inserindo salas...');
     await executeSQLFile(path.join(__dirname, '../dml/insert_salas.sql'));
 
+    console.log('Inserindo Triggers e Procedures...');
+    await executeSQLFile
+
     console.log('Dados inseridos com sucesso.');
   } catch (err) {
     console.error('Erro na inicialização:', err);
