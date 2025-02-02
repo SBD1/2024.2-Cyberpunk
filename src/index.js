@@ -81,7 +81,7 @@ async function getCyberLutadores() {
       FROM CyberLutador c
       LEFT JOIN Sala s ON c.fk_sala_atual = s.idSala
     `);
-    console.log("getcyber", res.rows);
+    // console.log("getcyber", res.rows);
     return res.rows;
   } catch (error) {
     console.error('Erro ao consultar os cyberlutadores:', error);

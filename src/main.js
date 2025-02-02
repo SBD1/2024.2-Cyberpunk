@@ -6,26 +6,20 @@ const pool = new Pool({
   database: 'cyberbase',
   password: 'password',
   port: 5432,
-})
+});
+
 const prompt = require('prompt-sync')();
 const { init, getSalas, getCyberLutadores, adicionarCyberLutador } = require('./index');
 
 let cyberlutadores = [];
 let salas = {};
+let salasArray = [];
 
 async function carregarSalas() {
-  const salasArray = await getSalas();
+  salasArray = await getSalas();
+  salas = {};
   salasArray.forEach(sala => {
-    salas[sala.idSala] = {
-      id: sala.idSala,
-      nome: sala.nomeSala,
-      conexoes: {
-        norte: sala.norte || null,
-        sul: sala.sul || null,
-        leste: sala.leste || null,
-        oeste: sala.oeste || null
-      }
-    };
+    salas[sala.nomeSala] = sala.idSala;
   });
 }
 
@@ -35,31 +29,31 @@ class CyberLutador {
     this.nome = nomecyberLutador;
     this.salaAtual = nomeSala;
   }
-
-  mover(direcao) {
-    const novaSalaId = salas[this.salaAtual].conexoes[direcao];
-    if (novaSalaId) {
-      this.salaAtual = novaSalaId;
-      console.log(`Você se moveu para a sala: ${salas[this.salaAtual].nomeSala}`);
-    } else {
-      console.log(`Não é possível ir para ${direcao}.`);
-    }
-  }
-
-  exibirMapa() {
-    const mapa = ["( )", "( )", "( )", "( )"];
-    const direcoes = ["norte", "sul", "leste", "oeste"];
-
-    direcoes.forEach((dir, index) => {
-      if (salas[this.salaAtual].conexoes[dir]) {
-        mapa[index] = "(x)";
-      }
+  async mover() {
+    console.log("Salas disponíveis:");
+    salasArray.forEach((s, index) => {
+        console.log(`${index + 1}.${s.nomesala}`);
     });
+    
+    const novaSalaNome = prompt("Digite o nome da sala para onde deseja ir: ");
+    
+    const salaEncontrada = salasArray.find(s => s.nomesala === novaSalaNome);
 
-    console.log(`Mapa da sala ${salas[this.salaAtual].nomeSala}:`);
-    console.log(`  ${mapa[0]}  `);
-    console.log(`${mapa[3]} (x) ${mapa[2]}`);
-    console.log(`  ${mapa[1]}  `);
+    if (!salaEncontrada) {
+        console.log("Sala não encontrada.");
+        return;
+    }
+
+    this.salaAtual = novaSalaNome; 
+    console.log(`\nVocê está em: ${novaSalaNome}`);
+    
+    const updateQuery = `UPDATE CyberLutador SET fk_sala_atual = (SELECT idSala FROM Sala WHERE nomeSala = $1) WHERE idCyberLutador = $2;`;
+    
+    try {
+        await pool.query(updateQuery, [novaSalaNome, this.id]);
+    } catch (error) {
+        console.error("Erro ao mover para a sala:", error.message);
+    }
   }
 }
 
@@ -87,8 +81,6 @@ async function iniciarJogo() {
           break;
         }
         console.log("Cyber Lutadores disponíveis:");
-        // console.log("Cyber Lutadores disponíveis: " + JSON.stringify(cyberlutadores[0].nomecyberlutador));
-
         cyberlutadores.forEach((c, index) => {
           console.log(`${index + 1}. Nome: ${c.nomecyberlutador}, Sala Atual: ${c.nomesala}`);
         });
@@ -96,21 +88,20 @@ async function iniciarJogo() {
         const escolha = parseInt(prompt("Escolha um cyberlutador: "), 10) - 1;
         if (escolha >= 0 && escolha < cyberlutadores.length) {
           const escolhido = cyberlutadores[escolha];
-          personagem = new CyberLutador(escolhido.idcyberLutador, escolhido.nomecyberLutador, escolhido.nomeSala);
+          personagem = new CyberLutador(escolhido.idcyberlutador, escolhido.nomecyberlutador, escolhido.nomesala);
+          console.log("personagem", personagem);
           console.log(`Personagem ${personagem.nome} selecionado!`);
-          personagem.exibirMapa();
         } else {
           console.log("Escolha inválida.");
         }
         break;
-        case "2":
-          const nomeCyberLutador = prompt("Digite o nome do CyberLutador: ");
-          const nomeSalaAtual = "Laboratorio";
-        
+
+      case "2":
+        const nomeCyberLutador = prompt("Digite o nome do CyberLutador: ");
+        const nomeSalaAtual = "Laboratorio";
+      
           try {
-            const querySala = `
-              SELECT idSala FROM Sala WHERE nomeSala = $1 LIMIT 1;
-            `;
+            const querySala = `SELECT idSala FROM Sala WHERE nomeSala = $1 LIMIT 1;`;
             const valuesSala = [nomeSalaAtual];
         
             const resSala = await pool.query(querySala, valuesSala);
@@ -119,41 +110,72 @@ async function iniciarJogo() {
               throw new Error('Sala não encontrada');
             }
         
-            const fkSalaAtual = resSala.rows[0].idsala; 
+            const fkSalaAtual = resSala.rows[0].idsala;
             console.log(`ID da sala "${nomeSalaAtual}": ${fkSalaAtual}`);
         
             const novoCyberLutador = await adicionarCyberLutador(nomeCyberLutador, fkSalaAtual);
             
             personagem = new CyberLutador(novoCyberLutador.idCyberLutador, novoCyberLutador.nomeCyberLutador, fkSalaAtual);
             console.log(`CyberLutador ${nomeCyberLutador} criado e posicionado na sala ${nomeSalaAtual}!`);
-            // personagem.exibirMapa();
           } catch (error) {
             console.error("Erro ao criar o CyberLutador:", error.message);
           }
           break;
-          
+
+      case "3":
+        if (!personagem) {
+          console.log("Você precisa selecionar um CyberLutador primeiro.");
+        } else {
+          try {
+            const query = `
+              SELECT c.idcyberlutador, c.nomecyberlutador, c.inteligencia, c.resistencia, c.furtividade, 
+                    c.percepcao, c.vida, c.velocidade, c.forca, s.nomesala
+              FROM CyberLutador c
+              JOIN Sala s ON c.fk_sala_atual = s.idSala
+              WHERE c.idcyberlutador = $1;
+            `;
+            const values = [personagem.id];
+
+            const res = await pool.query(query, values);
+
+            if (res.rows.length === 0) {
+              console.log("CyberLutador não encontrado.");
+              return;
+            }
+
+            const cyberLutador = res.rows[0];
+            
+            console.log("\n=== Informações do CyberLutador ===");
+            console.log(`Nome: ${cyberLutador.nomecyberlutador}`);
+            console.log(`Sala Atual: ${cyberLutador.nomesala}`);
+            console.log(`ID: ${cyberLutador.idcyberlutador}`);
+            console.log(`Inteligência: ${cyberLutador.inteligencia}`);
+            console.log(`Resistência: ${cyberLutador.resistencia}`);
+            console.log(`Furtividade: ${cyberLutador.furtividade}`);
+            console.log(`Percepção: ${cyberLutador.percepcao}`);
+            console.log(`Vida: ${cyberLutador.vida}`);
+            console.log(`Velocidade: ${cyberLutador.velocidade}`);
+            console.log(`Força: ${cyberLutador.forca}`);
+            
+          } catch (error) {
+            console.error("Erro ao buscar informações do CyberLutador:", error.message);
+          }
+        }
+        break;
+
       case "4":
         if (!personagem) {
           console.log("Você precisa selecionar um CyberLutador primeiro.");
           break;
         }
+        await personagem.mover(salasArray);
 
-        console.log("Movimentos disponíveis:");
-        for (const direcao in salas[personagem.salaAtual].conexoes) {
-          if (salas[personagem.salaAtual].conexoes[direcao]) {
-            console.log(`- ${direcao.toUpperCase()} para ${salas[salas[personagem.salaAtual].conexoes[direcao]].nome}`);
-          }
-        }
-
-        const direcao = prompt("Digite a direção (norte, sul, leste, oeste): ").toLowerCase();
-        personagem.mover(direcao);
-        personagem.exibirMapa();
         break;
-
+      
       case "5":
         console.log("Saindo do jogo...");
         break;
-
+      
       default:
         console.log("Opção inválida.");
     }
