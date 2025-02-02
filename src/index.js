@@ -2,6 +2,7 @@ const express = require('express');
 const { Pool } = require('pg');
 const path = require('path');
 const fs = require('fs');
+const prompt = require('prompt-sync')();
 
 const app = express();
 const initialPort = 3000;
@@ -99,7 +100,7 @@ async function adicionarCyberLutador(nomeCyberLutador, fkSalaAtual) {
         (nomeCyberLutador, inteligencia, resistencia, furtividade, percepcao, vida, velocidade, forca, fk_sala_atual)
       VALUES 
         ($1, $2, $3, $4, $5, $6, $7, $8, $9)
-      RETURNING *;
+      RETURNING idCyberLutador;
     `;
     const values = [
       nomeCyberLutador, inteligencia, resistencia, furtividade, percepcao, vida, velocidade, forca, fkSalaAtual
@@ -107,6 +108,57 @@ async function adicionarCyberLutador(nomeCyberLutador, fkSalaAtual) {
 
     const res = await pool.query(query, values);
     console.log('CyberLutador criado:', res.rows[0]);
+
+    // Lógica para Facção
+
+    console.log(`Escolha à qual facção o CyberLutador está representando: 
+      1 - Facção NetRunners, o Cyberlutador terá +2 Inteligência e Percepção
+      2 - Facção CodeKeepers, o Cyberlutador terá +2 Resistência e Velocidade`);
+
+      do {
+        var faccao = prompt("Digite o número da facção: ");
+        switch (faccao) {
+          case "1":
+            console.log("Facção NetRunners selecionada!");
+            // Inserir a facção "NetRunners"
+            let query = `INSERT INTO Faccao (fk_cyberlutador, nomeFaccao) 
+                         VALUES ($1, $2);`;
+            let values = [res.rows[0].idcyberlutador, "NetRunners"];
+            await pool.query(query, values);
+      
+            // Atualizar atributos do CyberLutador
+            query = `UPDATE CyberLutador 
+                     SET inteligencia = inteligencia + 2,
+                         percepcao = percepcao + 2 
+                     WHERE idcyberlutador = $1;`;
+            values = [res.rows[0].idcyberlutador];
+            await pool.query(query, values);
+            break;
+      
+          case "2":
+            console.log("Facção CodeKeepers selecionada!");
+            // Inserir a facção "CodeKeepers"
+            query = `INSERT INTO Faccao (fk_cyberlutador, nomeFaccao) 
+                     VALUES ($1, $2);`;
+            values = [res.rows[0].idcyberlutador, "CodeKeepers"];
+            await pool.query(query, values);
+      
+            // Atualizar atributos do CyberLutador
+            query = `UPDATE CyberLutador 
+                     SET velocidade = inteligencia + 2,
+                         resistencia = resistencia + 2
+                     WHERE idcyberlutador = $1;`;
+            values = [res.rows[0].idcyberlutador];
+            await pool.query(query, values);
+            break;
+      
+          default:
+            console.log("Opção inválida, por favor digite 1 ou 2.");
+        }
+      
+      } while (faccao !== "1" && faccao !== "2");
+
+      
     return res.rows[0];
   } catch (error) {
     console.error('Erro ao adicionar CyberLutador:', error);
@@ -117,8 +169,8 @@ async function adicionarCyberLutador(nomeCyberLutador, fkSalaAtual) {
 async function init() {
   try {
     await waitForDatabase();
-    // console.log('Resetando banco de dados...');
-    // await executeSQLFile(path.join(__dirname, '../ddl/reset_db.sql'));
+     console.log('Resetando banco de dados...');
+     await executeSQLFile(path.join(__dirname, '../ddl/reset_db.sql'));
     
     console.log('Criando tabelas...');
     await executeSQLFile(path.join(__dirname, '../ddl/create_tables.sql'));
