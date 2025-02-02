@@ -51,10 +51,40 @@ class CyberLutador {
     
     try {
         await pool.query(updateQuery, [novaSalaNome, this.id]);
-    } catch (error) {
+        
+        if (novaSalaNome.toLowerCase() === "Cyber Mercado".toLowerCase()) {
+          await this.abrirMercado();
+        }
+      } catch (error) {
         console.error("Erro ao mover para a sala:", error.message);
     }
   }
+
+  async abrirMercado() {
+    console.log("Você entrou no Cyber Mercado!");
+    let opcao;
+    do {
+    console.log("1. Comprar itens");
+    console.log("2. Vender itens");
+    console.log("3. Sair do mercado");
+    opcao = prompt("Escolha uma opção: ");
+    
+    switch (opcao) {
+      case "1":
+        await this.comprarItens();
+        break;
+      case "2":
+        await this.venderItens();
+        break;
+      case "3":
+        console.log("Saindo do mercado...");
+        break;
+      default:
+        console.log("Opção inválida.");
+    }
+  } while (opcao !== "3");
+
+}
 }
 
 async function iniciarJogo() {

@@ -46,3 +46,4 @@ $recompensa_missao$ LANGUAGE plpgsql;
 CREATE TRIGGER recompensa_missao_trigger
 AFTER UPDATE ON Missao
 FOR EACH ROW EXECUTE FUNCTION recompensa_missao();
+
