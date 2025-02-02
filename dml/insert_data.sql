@@ -74,9 +74,36 @@ VALUES
 (1, 1),
 (2, 2);
 
-UPDATE CyberLutador 
-SET fk_implante = 1 
-WHERE idCyber = 1;
+DELETE FROM InstanciaItem
+  WHERE idInstanciaItem = 1;
+
+-- NPCs
+
+INSERT INTO NPC (idNPC, nomeNPC, descricao, fk_sala)
+  VALUES (1, 'NPC Inicial', 'Descricao npc 1', 1);
+
+INSERT INTO Mentor (fk_npc, aumentaInteligencia, aumentaFurtividade, aumentaPercepcao)
+  VALUES (1, 10, 10, 10);
+
+-- Faccao
+
+INSERT INTO Faccao (idFaccao, fk_cyberlutador, nomeFaccao, ideologia)
+  VALUES (1, 1, 'Faccao Teste', 'Ideologia de teste'),
+         (2, 2, 'NetRunners', 'Ideologia NetRunners'),
+         (3, 3, 'CodeKeepers', 'Ideologia CodeKeepers'),
+         (4, 4, 'VoidWalkers', 'Ideologia VoidWalkers');
+
+INSERT INTO NetRunners (idNetRunners, fk_faccao, aumentaInte, aumentaPercep)
+  VALUES (1, 1, 10, 10);
+
+INSERT INTO CodeKeepers (idCodeKeepers, fk_faccao, aumentaVelo, aumentaResis)
+  VALUES (2, 2, 10, 10);
+
+
+-- MercadoClandestino
+
+INSERT INTO MercadoClandestino (idMercadoClandestino, nomeMercado, desccricao, fk_sala)
+  VALUES (1, 'Mercado Inicial', 'Descricao teste', 1);
 
 -- Mochilas
 

@@ -30,3 +30,21 @@ BEGIN
     EXECUTE 'DROP SCHEMA IF EXISTS public CASCADE';
     EXECUTE 'CREATE SCHEMA public';
 END $$;
+
+
+-- DO $$ 
+-- DECLARE
+--     r RECORD;
+-- BEGIN
+--     -- Desabilitar as restrições de chave estrangeira para evitar erros de violação
+--     EXECUTE 'SET CONSTRAINTS ALL DEFERRED';
+
+--     -- Itera sobre todas as tabelas no banco de dados
+--     FOR r IN (SELECT tablename FROM pg_tables WHERE schemaname = 'public') LOOP
+--         -- Para cada tabela, apaga os dados
+--         EXECUTE 'TRUNCATE TABLE public.' || r.tablename || ' CASCADE';
+--     END LOOP;
+
+--     -- Reabilitar as restrições de chave estrangeira
+--     EXECUTE 'SET CONSTRAINTS ALL IMMEDIATE';
+-- END $$;

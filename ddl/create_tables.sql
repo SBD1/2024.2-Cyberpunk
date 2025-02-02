@@ -32,19 +32,30 @@ CREATE TABLE IF NOT EXISTS Regiao (
 CREATE TABLE IF NOT EXISTS Sala (
   idSala INT PRIMARY KEY DEFAULT nextval('sala_id_seq'),
   nomeSala VARCHAR(50) NOT NULL,
+  norte INT,
+  sul INT,
+  leste INT,
+  oeste INT,
   fk_regiao INT NOT NULL,
-  FOREIGN KEY (fk_regiao) REFERENCES Regiao (idRegiao) ON DELETE CASCADE
+  FOREIGN KEY (fk_regiao) REFERENCES Regiao (idRegiao) ON DELETE CASCADE,
+  FOREIGN KEY (norte) REFERENCES Sala (idSala) ON DELETE SET NULL,
+  FOREIGN KEY (sul) REFERENCES Sala (idSala) ON DELETE SET NULL,
+  FOREIGN KEY (leste) REFERENCES Sala (idSala) ON DELETE SET NULL,
+  FOREIGN KEY (oeste) REFERENCES Sala (idSala) ON DELETE SET NULL
 );
 
 CREATE TABLE IF NOT EXISTS CyberLutador (
-  idCyber INT PRIMARY KEY DEFAULT nextval('cyberlutador_id_seq'),
+  idCyberLutador INT PRIMARY KEY DEFAULT nextval('cyberlutador_id_seq'),
+  nomeCyberLutador VARCHAR(50) NOT NULL,
   inteligencia INT NOT NULL,
   resistencia INT NOT NULL,
   furtividade INT NOT NULL,
   percepcao INT NOT NULL,
   vida INT NOT NULL,
   velocidade INT NOT NULL,
-  forca INT NOT NULL
+  forca INT NOT NULL,
+  fk_sala_atual INT NOT NULL, 
+  FOREIGN KEY (fk_sala_atual) REFERENCES Sala (idSala)
 );
 
 CREATE TABLE IF NOT EXISTS NPC (
@@ -58,17 +69,20 @@ CREATE TABLE IF NOT EXISTS NPC (
 CREATE TABLE IF NOT EXISTS Missao (
   idMissao INT PRIMARY KEY DEFAULT nextval('missao_id_seq'),
   nomeMissao VARCHAR(50) NOT NULL,
-  descricao VARCHAR(255) NOT NULL,
+  objetivo VARCHAR(255) NOT NULL,
+  progresso VARCHAR(50) NOT NULL,
   fk_sala INT NOT NULL,
   fk_cyberlutador INT NOT NULL,
   FOREIGN KEY (fk_sala) REFERENCES Sala (idSala) ON DELETE CASCADE, 
-  FOREIGN KEY (fk_cyberlutador) REFERENCES CyberLutador (idCyber) ON DELETE CASCADE
+  FOREIGN KEY (fk_cyberlutador) REFERENCES CyberLutador (idCyberLutador) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS Puzzle (
   idPuzzle INT PRIMARY KEY DEFAULT nextval('puzzle_id_seq'),
   nomePuzzle VARCHAR(30) NOT NULL,
   dificuldade VARCHAR(10) NOT NULL,
+  resposta VARCHAR(50) NOT NULL,
+  estado VARCHAR(50) NOT NULL,
   fk_missao INT NOT NULL,
   FOREIGN KEY (fk_missao) REFERENCES Missao (idMissao) ON DELETE CASCADE
 );
@@ -116,7 +130,11 @@ CREATE TABLE IF NOT EXISTS Item (
 CREATE TABLE IF NOT EXISTS InstanciaItem (
   idInstanciaItem INT PRIMARY KEY DEFAULT nextval('instancia_item_id_seq'),
   fk_item INT NOT NULL,
-  FOREIGN KEY (fk_item) REFERENCES Item (idItem) ON DELETE CASCADE
+  fk_mochila INT,
+  fk_mercado_clandestino INT,
+  FOREIGN KEY (fk_item) REFERENCES Item (idItem),
+  FOREIGN KEY (fk_mochila) REFERENCES Mochila (idMochila),
+  FOREIGN KEY (fk_mercado_clandestino) REFERENCES MercadoClandestino (idMercadoClandestino)
 );
 
 
@@ -125,7 +143,7 @@ CREATE TABLE IF NOT EXISTS Faccao (
   fk_cyberlutador INT NOT NULL,
   nomeFaccao VARCHAR(50) NOT NULL,
   ideologia VARCHAR(255) NOT NULL,
-  FOREIGN KEY (fk_cyberlutador) REFERENCES CyberLutador (idCyber) ON DELETE CASCADE
+  FOREIGN KEY (fk_cyberlutador) REFERENCES CyberLutador (idCyberLutador) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS Recompensa (
@@ -135,7 +153,7 @@ CREATE TABLE IF NOT EXISTS Recompensa (
   fk_instancia_inimigo INT NOT NULL,
   fk_cyberlutador INT NOT NULL,
   FOREIGN KEY (fk_instancia_inimigo) REFERENCES InstanciaInimigo (idInstanciaInimigo) ON DELETE CASCADE,
-  FOREIGN KEY (fk_cyberlutador) REFERENCES CyberLutador (idCyber) ON DELETE CASCADE
+  FOREIGN KEY (fk_cyberlutador) REFERENCES CyberLutador (idCyberLutador) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS RecompensaMissao (
@@ -145,7 +163,7 @@ CREATE TABLE IF NOT EXISTS RecompensaMissao (
   fk_sala INT NOT NULL,
   fk_cyberlutador INT NOT NULL,
   FOREIGN KEY (fk_sala) REFERENCES Sala (idSala) ON DELETE CASCADE,
-  FOREIGN KEY (fk_cyberlutador) REFERENCES CyberLutador (idCyber) ON DELETE CASCADE
+  FOREIGN KEY (fk_cyberlutador) REFERENCES CyberLutador (idCyberLutador) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS Mentor (
@@ -186,7 +204,7 @@ CREATE TABLE IF NOT EXISTS Mochila (
   capacidade INT NOT NULL,
   fk_cyberlutador INT NOT NULL,
   fk_instanciaitem INT NOT NULL,
-  FOREIGN KEY (fk_cyberlutador) REFERENCES CyberLutador (idCyber) ON DELETE CASCADE,
+  FOREIGN KEY (fk_cyberlutador) REFERENCES CyberLutador (idCyberLutador) ON DELETE CASCADE,
   FOREIGN KEY (fk_instanciaitem) REFERENCES InstanciaItem (idInstanciaItem) ON DELETE CASCADE
 );
 
@@ -202,7 +220,9 @@ CREATE TABLE IF NOT EXISTS Implante (
   nomeImplante VARCHAR(50) NOT NULL,
   tipo VARCHAR(50) NOT NULL,
   fk_item INT NOT NULL,
-  FOREIGN KEY (fk_item) REFERENCES Item (idItem) ON DELETE CASCADE
+  fk_cyberlutador INT NOT NULL,
+  FOREIGN KEY (fk_item) REFERENCES Item (idItem) ON DELETE CASCADE,
+  FOREIGN KEY (fk_cyberlutador) REFERENCES CyberLutador (idCyberLutador)
 );
 
 CREATE TABLE IF NOT EXISTS Biochip (
