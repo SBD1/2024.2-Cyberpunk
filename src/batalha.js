@@ -1,44 +1,34 @@
 const { Pool } = require('pg');
 
-// Configuração do pool de conexões
 const pool = new Pool({
     user: 'postgres',
-    host: 'localhost',
+    host: 'db',
     database: 'cyberbase',
     password: 'password',
-    port: 5437,
+    port: 5432,
 });
 
-async function fetchCombatants() {
-    console.log("1. Iniciando fetchCombatants..."); // Passo 1
+async function fetchCombatants(idCyberLutador, idInstanciaInimigo) {
     const client = await pool.connect();
     try {
-        console.log("2. Conexão com o banco de dados estabelecida."); // Passo 2
-        
-        // Busca dados do CyberLutador
         const cyberQuery = `
             SELECT idCyber, nomeCyberLutador, vida, forca 
             FROM CyberLutador 
-            WHERE idCyber = 1`;
-        console.log("3. Consulta CyberLutador preparada: ", cyberQuery); // Passo 3
-        
-        // Busca dados do Inimigo corrigindo o JOIN
+            WHERE idCyber = $1`;
+
         const enemyQuery = `
             SELECT qtdDano, vida 
             FROM Inimigo
             JOIN InstanciaInimigo ON idInimigo = fk_inimigo
-            WHERE idInstanciaInimigo = 1`;
-        console.log("4. Consulta Inimigo preparada: ", enemyQuery); // Passo 4
+            WHERE idInstanciaInimigo = $1`;
 
         const [cyberResult, enemyResult] = await Promise.all([
-            client.query(cyberQuery),
-            client.query(enemyQuery)
+            client.query(cyberQuery, [idCyberLutador]),
+            client.query(enemyQuery, [idInstanciaInimigo])
         ]);
-        console.log("5. Consultas executadas com sucesso."); // Passo 5
 
         if (!cyberResult.rows[0]) throw new Error('CyberLutador não encontrado');
         if (!enemyResult.rows[0]) throw new Error('Inimigo não encontrado');
-        console.log("6. Dados do CyberLutador e Inimigo encontrados."); // Passo 6
 
         return {
             cyber: cyberResult.rows[0],
@@ -49,65 +39,58 @@ async function fetchCombatants() {
         throw error; 
     } finally {
         client.release();
-        console.log("7. Conexão com o banco de dados liberada."); // Passo 7
     }
 }
 
 async function battleInterface(prompt, cyber, enemy) {
-    console.log("\n8. Iniciando interface de batalha..."); // Passo 8
-    console.log(`\n=== BATALHA: ${cyber.nomecyber} vs Inimigo ===`);
+    console.log(`\n=== BATALHA: ${cyber.nomecyberlutador} vs Inimigo ===`);
     
     let combatActive = true;
     
     while (combatActive && cyber.vida > 0 && enemy.vida > 0) {
-        console.log(`\n9. Sua vida: ${cyber.vida} | Vida do inimigo: ${enemy.vida}`); // Passo 9
-        console.log("10. 1. Atacar");
-        console.log("10. 2. Fugir");
+        console.log(`\nSua vida: ${cyber.vida} | Vida do inimigo: ${enemy.vida}`);
+        console.log("1. Atacar");
+        console.log("2. Fugir");
         const choice = prompt("Escolha uma ação: ");
 
         switch(choice) {
             case "1":
-                console.log("11. Jogador escolheu atacar!"); // Passo 11
-                // Ataque do jogador
                 console.log(`\nVocê ataca causando ${cyber.forca} de dano!`);
                 enemy.vida -= cyber.forca;
                 
                 if (enemy.vida <= 0) {
-                    console.log("\n12. Você derrotou o inimigo!"); // Passo 12
-
+                    console.log("\nVocê derrotou o inimigo!");
                     return true;
                 }
                 
-                // Ataque do inimigo
-                console.log(`13. O inimigo contra-ataca causando ${enemy.qtddano} de dano!`); // Passo 13
+                console.log(`O inimigo contra-ataca causando ${enemy.qtddano} de dano!`);
                 cyber.vida -= enemy.qtddano;
                 
                 if (cyber.vida <= 0) {
-                    console.log("\n14. Você foi derrotado..."); // Passo 14
+                    console.log("\nVocê foi derrotado...");
                     return false;
                 }
                 break;
                 
             case "2":
-                console.log("\n15. Você fugiu da batalha!"); // Passo 15
+                console.log("\nVocê fugiu da batalha!");
                 combatActive = false;
                 return false;
                 
             default:
-                console.log("16. Opção inválida! Tente novamente."); // Passo 16
+                console.log("Opção inválida! Tente novamente.");
         }
     }
     return false;
 }
 
 module.exports = {
-    iniciarBatalha: async (prompt) => {
+    iniciarBatalha: async (prompt, idCyberLutador, idInstanciaInimigo) => {
         try {
-            console.log("17. Iniciando batalha..."); // Passo 17
-            const combatants = await fetchCombatants();
+            const combatants = await fetchCombatants(idCyberLutador, idInstanciaInimigo);
             return battleInterface(prompt, combatants.cyber, combatants.enemy);
         } catch (error) {
-            console.log("18. Erro na batalha:", error.message); // Passo 18
+            console.log("Erro na batalha:", error.message);
             return false;
         }
     }
