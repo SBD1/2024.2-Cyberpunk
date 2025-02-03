@@ -3,6 +3,7 @@ const { Pool } = require('pg');
 const path = require('path');
 const fs = require('fs');
 const { iniciarMissao } = require('./missaoPuzzle'); // Importando a função de missão
+const prompt = require('prompt-sync')();
 
 const app = express();
 const initialPort = 3000;
@@ -94,19 +95,71 @@ async function adicionarCyberLutador(nomeCyberLutador, fkSalaAtual) {
     const atributosAleatorios = Array.from({ length: 7 }, () => Math.floor(Math.random() * 5)); // Valores entre 0 e 4
     const [inteligencia, resistencia, furtividade, percepcao, vida, velocidade, forca] = atributosAleatorios;
 
-    const query = `
+    const queryInsercao = `
       INSERT INTO CyberLutador 
         (nomeCyberLutador, inteligencia, resistencia, furtividade, percepcao, vida, velocidade, forca, fk_sala_atual)
       VALUES 
         ($1, $2, $3, $4, $5, $6, $7, $8, $9)
-      RETURNING *;
+      RETURNING idCyberLutador;
     `;
-    const values = [
+    const valuesInsercao = [
       nomeCyberLutador, inteligencia, resistencia, furtividade, percepcao, vida, velocidade, forca, fkSalaAtual
     ];
 
-    const res = await pool.query(query, values);
+    const res = await pool.query(queryInsercao, valuesInsercao);
+    const idCyberLutador = res.rows[0].idcyberlutador;
+
     console.log('CyberLutador criado:', res.rows[0]);
+
+    // Lógica para Facção
+    console.log(`Escolha à qual facção o CyberLutador está representando: 
+      1 - Facção NetRunners, o Cyberlutador terá +2 Inteligência e Percepção
+      2 - Facção CodeKeepers, o Cyberlutador terá +2 Resistência e Velocidade`);
+
+    let faccao;
+    let query;
+    let values;
+
+    do {
+      faccao = prompt("Digite o número da facção: ");
+      switch (faccao) {
+        case "1":
+          console.log("Facção NetRunners selecionada!");
+          
+          query = `INSERT INTO Faccao (fk_cyberlutador, nomeFaccao, ideologia) 
+                   VALUES ($1, $2, $3);`;
+          values = [idCyberLutador, "NetRunners", "Tecnologia e inovação"];
+          await pool.query(query, values);
+
+          query = `UPDATE CyberLutador 
+                   SET inteligencia = inteligencia + 2,
+                       percepcao = percepcao + 2 
+                   WHERE idcyberlutador = $1;`;
+          values = [idCyberLutador];
+          await pool.query(query, values);
+          break;
+
+        case "2":
+          console.log("Facção CodeKeepers selecionada!");
+          
+          query = `INSERT INTO Faccao (fk_cyberlutador, nomeFaccao, ideologia) 
+                   VALUES ($1, $2, $3);`;
+          values = [idCyberLutador, "CodeKeepers", "Segurança e preservação"];
+          await pool.query(query, values);
+
+          query = `UPDATE CyberLutador 
+                   SET velocidade = velocidade + 2,
+                       resistencia = resistencia + 2
+                   WHERE idcyberlutador = $1;`;
+          values = [idCyberLutador];
+          await pool.query(query, values);
+          break;
+
+        default:
+          console.log("Opção inválida, por favor digite 1 ou 2.");
+      }
+    } while (faccao !== "1" && faccao !== "2");
+
     return res.rows[0];
   } catch (error) {
     console.error('Erro ao adicionar CyberLutador:', error);
@@ -138,11 +191,20 @@ async function concluirMissao(idMissao) {
 async function init() {
   try {
     await waitForDatabase();
+    //  console.log('Resetando banco de dados...');
+    //  await executeSQLFile(path.join(__dirname, '../ddl/reset_db.sql'));
+    
     console.log('Criando tabelas...');
     await executeSQLFile(path.join(__dirname, '../ddl/create_tables.sql'));
 
     console.log('Inserindo salas...');
     await executeSQLFile(path.join(__dirname, '../dml/insert_salas.sql'));
+
+    console.log('Inserindo Mercado...');
+    await executeSQLFile(path.join(__dirname, '../dml/insert_mercado.sql'));
+
+    console.log('Inserindo Triggers e Procedures...');
+    await executeSQLFile(path.join(__dirname, '../triggers-procedures/triggers-procedures.sql'));
 
     console.log('Dados inseridos com sucesso.');
   } catch (err) {
