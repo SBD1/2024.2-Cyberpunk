@@ -174,57 +174,52 @@ async function iniciarJogo() {
         break;
       
       case "5":
-        if (!personagem) {
-            console.log("Você precisa selecionar um CyberLutador primeiro.");
-        } else if (personagem.salaAtual !== "Laboratorio") {
-            console.log("Você precisa estar no Laboratório para iniciar a missão.");
-        } else {
-            // Verificar se já existe uma missão em andamento
-            const query = `
-                SELECT idMissao FROM Missao
-                WHERE fk_cyberlutador = $1 AND progresso != 'Concluída';
-            `;
-            const res = await pool.query(query, [personagem.id]);
-
-            if (res.rows.length > 0) {
-                console.log("Você já tem uma missão em andamento. Use a opção 'Continuar Missão'.");
-            } else {
-                // Criar uma nova missão
-                const insertQuery = `
-                    INSERT INTO Missao (nomeMissao, objetivo, progresso, fk_sala, fk_cyberlutador)
-                    VALUES ('Missão Principal', 'Recuperar o controle do sistema', '0/5', (SELECT idSala FROM Sala WHERE nomeSala = 'Laboratorio'), $1)
-                    RETURNING idMissao;
-                `;
-                const insertRes = await pool.query(insertQuery, [personagem.id]);
-                const idMissao = insertRes.rows[0].idmissao;
-
-                await iniciarMissao(personagem, pool, idMissao);
-            }
-        }
-        break;
-
+          if (!personagem) {
+              console.log("Você precisa selecionar um CyberLutador primeiro.");
+          } else {
+              // Verificar se já existe uma missão em andamento
+              const query = `
+                  SELECT idMissao FROM Missao
+                  WHERE fk_cyberlutador = $1 AND progresso != 'Concluída';
+              `;
+              const res = await pool.query(query, [personagem.id]);
+  
+              if (res.rows.length > 0) {
+                  console.log("Você já tem uma missão em andamento. Use a opção 'Continuar Missão'.");
+              } else {
+                  // Criar uma nova missão
+                  const insertQuery = `
+                      INSERT INTO Missao (nomeMissao, objetivo, progresso, fk_sala, fk_cyberlutador)
+                      VALUES ('Missão Principal', 'Recuperar o controle do sistema', '0/5', (SELECT idSala FROM Sala WHERE nomeSala = $1), $2)
+                      RETURNING idMissao;
+                  `;
+                  const insertRes = await pool.query(insertQuery, [personagem.salaAtual, personagem.id]);
+                  const idMissao = insertRes.rows[0].idmissao;
+  
+                  await iniciarMissao(personagem, pool, idMissao);
+              }
+          }
+          break;
+  
       case "6":
-        if (!personagem) {
-            console.log("Você precisa selecionar um CyberLutador primeiro.");
-        } else if (personagem.salaAtual !== "Laboratorio") {
-            console.log("Você precisa estar no Laboratório para continuar a missão.");
-        } else {
-          
-            const query = `
-                SELECT idMissao FROM Missao
-                WHERE fk_cyberlutador = $1 AND progresso != 'Concluída';
-            `;
-            const res = await pool.query(query, [personagem.id]);
-
-            if (res.rows.length === 0) {
-                console.log("Você não tem uma missão em andamento. Use a opção 'Iniciar Missão'.");
-            } else {
-                const idMissao = res.rows[0].idmissao;
-                await iniciarMissao(personagem, pool, idMissao);
-            }
-        }
-        break;
-
+          if (!personagem) {
+              console.log("Você precisa selecionar um CyberLutador primeiro.");
+          } else {
+              // Verificar se existe uma missão em andamento
+              const query = `
+                  SELECT idMissao FROM Missao
+                  WHERE fk_cyberlutador = $1 AND progresso != 'Concluída';
+              `;
+              const res = await pool.query(query, [personagem.id]);
+  
+              if (res.rows.length === 0) {
+                  console.log("Você não tem uma missão em andamento. Use a opção 'Iniciar Missão'.");
+              } else {
+                  const idMissao = res.rows[0].idmissao;
+                  await iniciarMissao(personagem, pool, idMissao);
+              }
+          }
+          break;
       case "7":
           console.log("Saindo do jogo...");
           break;
