@@ -101,7 +101,7 @@ class CyberLutador {
               let itemIds = [];
   
               rows.forEach((item, index) => {
-                  console.log(`${index + 1}. ${item.nomeitem} - 💰 ${item.preco}`);
+                  console.log(`${index + 1}. ${item.nomeitem} - ${item.preco}`);
                   itemIds.push(item.iditem); // Guarda os IDs dos itens
               });
 
