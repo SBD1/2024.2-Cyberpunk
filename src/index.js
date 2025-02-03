@@ -178,6 +178,9 @@ async function init() {
     console.log('Inserindo salas...');
     await executeSQLFile(path.join(__dirname, '../dml/insert_salas.sql'));
 
+    console.log('Inserindo Mercado...');
+    await executeSQLFile(path.join(__dirname, '../dml/insert_mercado.sql'));
+
     console.log('Inserindo Triggers e Procedures...');
     await executeSQLFile(path.join(__dirname, '../triggers-procedures/triggers-procedures.sql'));
 
