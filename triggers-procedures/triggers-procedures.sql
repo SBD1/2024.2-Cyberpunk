@@ -72,5 +72,5 @@ END;
 $comprar_item$ LANGUAGE plpgsql;
 
 CREATE TRIGGER comprar_item_trigger
-BEFORE UPDATE ON Mochila_Item
+BEFORE UPDATE ON Mercado_Item
 FOR EACH ROW EXECUTE FUNCTION comprar_item();
