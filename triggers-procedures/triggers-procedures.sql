@@ -107,3 +107,50 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER criar_mochila_trigger
 AFTER INSERT ON CyberLutador
 FOR EACH ROW EXECUTE criar_mochila();
+
+
+CREATE OR REPLACE FUNCTION equipar_item()
+RETURNS TRIGGER AS $$
+DECLARE
+    aumento_forca INT := 0;
+    aumento_velocidade INT := 0;
+    aumento_inteligencia INT := 0;
+    aumento_resistencia INT := 0;
+    aumento_furtividade INT := 0;
+    aumento_percepcao INT := 0;
+    aumento_vida INT := 0;
+BEGIN
+    -- Verificar se é um Biochip
+    SELECT regeneraVida INTO aumento_vida
+    FROM Biochip WHERE fk_item = NEW.fk_item;
+
+    -- Verificar se é um Implante e quais atributos ele aumenta
+    SELECT aumentaForca, aumentaVeloc INTO aumento_forca, aumento_velocidade
+    FROM BracoRobotico WHERE fk_implante = (SELECT idImplante FROM Implante WHERE fk_item = NEW.fk_item);
+    
+    SELECT aumentaInt, aumentaResis INTO aumento_inteligencia, aumento_resistencia
+    FROM CapaceteNeural WHERE fk_implante = (SELECT idImplante FROM Implante WHERE fk_item = NEW.fk_item);
+    
+    SELECT aumentaFurti, aumentaPercep INTO aumento_furtividade, aumento_percepcao
+    FROM VisaoCibernetica WHERE fk_implante = (SELECT idImplante FROM Implante WHERE fk_item = NEW.fk_item);
+
+    -- Atualizar os atributos do CyberLutador
+    UPDATE CyberLutador
+    SET 
+        forca = forca + COALESCE(aumento_forca, 0),
+        velocidade = velocidade + COALESCE(aumento_velocidade, 0),
+        inteligencia = inteligencia + COALESCE(aumento_inteligencia, 0),
+        resistencia = resistencia + COALESCE(aumento_resistencia, 0),
+        furtividade = furtividade + COALESCE(aumento_furtividade, 0),
+        percepcao = percepcao + COALESCE(aumento_percepcao, 0),
+        vida = vida + COALESCE(aumento_vida, 0)
+    WHERE idCyberLutador = NEW.fk_cyberlutador;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Criar trigger para equipar_item
+CREATE TRIGGER equipar_item_trigger
+AFTER INSERT ON InstanciaItem
+FOR EACH ROW WHEN (NEW.fk_cyberlutador IS NOT NULL) EXECUTE FUNCTION equipar_item();
