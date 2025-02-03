@@ -17,7 +17,7 @@ async function fetchCombatants() {
         
         // Busca dados do CyberLutador
         const cyberQuery = `
-            SELECT idCyber, nomeCyber, vida, forca 
+            SELECT idCyber, nomeCyberLutador, vida, forca 
             FROM CyberLutador 
             WHERE idCyber = 1`;
         console.log("3. Consulta CyberLutador preparada: ", cyberQuery); // Passo 3
@@ -74,21 +74,6 @@ async function battleInterface(prompt, cyber, enemy) {
                 
                 if (enemy.vida <= 0) {
                     console.log("\n12. Você derrotou o inimigo!"); // Passo 12
-
-                    const client = await pool.connect();
-                    try {
-                        const salaFantasma = `
-                            UPDATE InstanciaInimigo
-                            SET fk_sala = 0
-                            WHERE idInstanciaInimigo = 1 AND Inimigo.fk_npc = 1 AND npc.idnpc = 1`;
-                        
-                        await client.query(salaFantasma, [enemy.idInstanciaInimigo]);
-                        console.log("Inimigo movido para a sala fantasma.");
-                    } catch (error) {
-                        console.log("Erro ao mover o inimigo para a sala fantasma:", error.message);
-                    } finally {
-                        client.release();
-                    }
 
                     return true;
                 }
