@@ -1,5 +1,7 @@
 const { Pool } = require('pg');
 const prompt = require('prompt-sync')();
+const { init, getSalas, getCyberLutadores, adicionarCyberLutador } = require('./index');
+const { iniciarMissao } = require('./missaoPuzzle');
 
 const pool = new Pool({
   user: 'postgres',
@@ -8,8 +10,6 @@ const pool = new Pool({
   password: 'password',
   port: 5432,
 });
-
-const { init, getSalas, getCyberLutadores, adicionarCyberLutador } = require('./index');
 
 let cyberlutadores = [];
 let salas = {};
@@ -55,79 +55,6 @@ class CyberLutador {
     } catch (error) {
         console.error("Erro ao mover para a sala:", error.message);
     }
-  }
-}
-
-function gerarPuzzleMatematico() {
-  const num1 = Math.floor(Math.random() * 500) + 100;
-  const num2 = Math.floor(Math.random() * 500) + 100;
-  const operacoes = ['+', '-', '*', '/'];
-  const operacao = operacoes[Math.floor(Math.random() * operacoes.length)];
-  let resultado;
-
-  switch (operacao) {
-    case '+': resultado = num1 + num2; break;
-    case '-': resultado = num1 - num2; break;
-    case '*': resultado = num1 * num2; break;
-    case '/': resultado = Math.floor(num1 / num2); break;
-  }
-
-  return { pergunta: `Resolva: ${num1} ${operacao} ${num2}`, resposta: resultado };
-}
-
-function gerarPuzzleDecodificador() {
-  const palavrasCyberpunk = ['neon', 'hacker', 'android', 'implante', 'circuito', 'ciborgue', 'edgerunner'];
-  const palavraEscolhida = palavrasCyberpunk[Math.floor(Math.random() * palavrasCyberpunk.length)];
-  
-  const alfabeto = 'abcdefghijklmnopqrstuvwxyz';
-  const mapeamento = {};
-  let numero = 1;
-
-  for (const letra of alfabeto) {
-    mapeamento[letra] = numero;
-    numero++;
-  }
-
-  let palavraCodificada = '';
-  for (const letra of palavraEscolhida) {
-    palavraCodificada += mapeamento[letra] + ' ';
-  }
-
-  return { dica: 'Cada letra do alfabeto corresponde a um número.', palavraCodificada, resposta: palavraEscolhida };
-}
-
-async function iniciarMissao(cyberLutador) {
-  console.log("\n=== Você iniciou uma missão! ===");
-
-  const historiaMissao = 
-  `Você foi convocado para uma missão crítica. Um sistema de inteligência artificial,
-  projetado para controlar as cidades cibernéticas, foi hackeado por uma facção desconhecida.
-  Seu objetivo é recuperar o controle do sistema resolvendo puzzles complexos.
-
-  A missão está dividida em dois desafios:
-  1. Resolva um puzzle matemático para hackear os sistemas de segurança.
-  2. Decodifique uma palavra codificada para liberar os dados secretos da facção.
-
-  Cada passo certo aproxima você do sucesso. Boa sorte, CyberLutador!`;
-  console.log(historiaMissao);
-
-  const tipoPuzzle = Math.random() > 0.5 ? 'matematica' : 'decodificador';
-  let puzzle;
-
-  if (tipoPuzzle === 'matematica') {
-      puzzle = gerarPuzzleMatematico();
-      console.log(puzzle.pergunta);
-  } else {
-      puzzle = gerarPuzzleDecodificador();
-      console.log(puzzle.dica);
-      console.log(`Palavra codificada: ${puzzle.palavraCodificada}`);
-  }
-
-  const respostaJogador = prompt("Digite sua resposta: ");
-  if (respostaJogador.toLowerCase() === String(puzzle.resposta).toLowerCase()) {
-      console.log("Parabéns! Você resolveu o puzzle.");
-  } else {
-      console.log("Resposta incorreta.");
   }
 }
 
@@ -251,7 +178,7 @@ async function iniciarJogo() {
         } else if (personagem.salaAtual !== "Laboratorio") {
             console.log("Você precisa estar no Laboratório para iniciar a missão.");
         } else {
-            await iniciarMissao(personagem);
+            await iniciarMissao(personagem, pool); // Passando o pool como argumento
         }
         break;
 

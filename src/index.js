@@ -2,6 +2,7 @@ const express = require('express');
 const { Pool } = require('pg');
 const path = require('path');
 const fs = require('fs');
+const { iniciarMissao } = require('./missaoPuzzle'); // Importando a função de missão
 
 const app = express();
 const initialPort = 3000;
@@ -81,7 +82,6 @@ async function getCyberLutadores() {
       FROM CyberLutador c
       LEFT JOIN Sala s ON c.fk_sala_atual = s.idSala
     `);
-    // console.log("getcyber", res.rows);
     return res.rows;
   } catch (error) {
     console.error('Erro ao consultar os cyberlutadores:', error);
@@ -135,47 +135,9 @@ async function concluirMissao(idMissao) {
   }
 }
 
-async function iniciarMissao(cyberLutador) {
-  const missoes = await getMissoes();
-  const missaoAtual = missoes.find(m => !m.concluida);
-
-  if (!missaoAtual) {
-    console.log("Todas as missões foram concluídas!");
-    return;
-  }
-
-  console.log(`\n=== Missão: ${missaoAtual.nomeMissao} ===`);
-  console.log(missaoAtual.descricao);
-
-  const tipoPuzzle = Math.random() > 0.5 ? 'matematica' : 'decodificador';
-  let puzzle;
-
-  if (tipoPuzzle === 'matematica') {
-    puzzle = gerarPuzzleMatematico();
-    console.log(puzzle.pergunta);
-  } else {
-    puzzle = gerarPuzzleDecodificador();
-    console.log(puzzle.dica);
-    console.log(`Palavra codificada: ${puzzle.palavraCodificada}`);
-  }
-
-  const respostaJogador = prompt("Digite sua resposta: ");
-  if (respostaJogador.toLowerCase() === String(puzzle.resposta).toLowerCase()) {
-    console.log("Parabéns! Você resolveu o puzzle.");
-    await concluirMissao(missaoAtual.idMissao);
-    console.log("Missão concluída! Próxima missão desbloqueada.");
-  } else {
-    console.log("Resposta incorreta. Tente novamente.");
-  }
-}
-
-
 async function init() {
   try {
     await waitForDatabase();
-    // console.log('Resetando banco de dados...');
-    // await executeSQLFile(path.join(__dirname, '../ddl/reset_db.sql'));
-    
     console.log('Criando tabelas...');
     await executeSQLFile(path.join(__dirname, '../ddl/create_tables.sql'));
 
@@ -188,7 +150,6 @@ async function init() {
     process.exit(1);
   }
 }
-
 async function startServer(port) {
   return new Promise((resolve, reject) => {
     app.listen(port, () => {
