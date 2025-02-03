@@ -9,10 +9,12 @@ END $$;
 DROP TRIGGER IF EXISTS recompensa_normal_trigger ON InstanciaInimigo;
 DROP TRIGGER IF EXISTS recompensa_missao_trigger ON Missao;
 DROP TRIGGER IF EXISTS comprar_item_trigger ON Mercado_Item;
+DROP TRIGGER IF EXISTS criar_mochila_trigger ON CyberLutador;
 
 DROP FUNCTION IF EXISTS recompensa_normal();
 DROP FUNCTION IF EXISTS recompensa_missao();
 DROP FUNCTION IF EXISTS comprar_item();
+DROP FUNCTION IF EXISTS criar_mochila();
 
 CREATE FUNCTION recompensa_normal() RETURNS TRIGGER AS $recompensa_normal$
 DECLARE
@@ -88,3 +90,20 @@ $comprar_item$ LANGUAGE plpgsql;
 CREATE TRIGGER comprar_item_trigger
 BEFORE UPDATE ON Mercado_Item
 FOR EACH ROW EXECUTE FUNCTION comprar_item();
+
+
+CREATE OR REPLACE FUNCTION criar_mochila() RETURNS TRIGGER AS $criar_mochila$
+DECLARE
+    nova_mochila_id INT;
+BEGIN
+    INSERT INTO Mochila (capacidade, fk_cyberlutador)
+    VALUES (20, NEW.idCyberLutador);
+    
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Criar trigger para criar_mochila
+CREATE TRIGGER criar_mochila_trigger
+AFTER INSERT ON CyberLutador
+FOR EACH ROW EXECUTE criar_mochila();
