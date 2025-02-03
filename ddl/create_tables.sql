@@ -204,6 +204,14 @@ CREATE TABLE IF NOT EXISTS MercadoClandestino (
   FOREIGN KEY (fk_sala) REFERENCES Sala (idSala) ON DELETE CASCADE
 );
 
+CREATE TABLE IF NOT EXISTS Mercado_Item (
+  fk_mercado_clandestino INT NOT NULL,
+  fk_instanciaitem INT NOT NULL,
+  PRIMARY KEY (fk_mercado_clandestino, fk_instanciaitem),
+  FOREIGN KEY (fk_mercado_clandestino) REFERENCES MercadoClandestino (idMercadoClandestino) ON DELETE CASCADE,
+  FOREIGN KEY (fk_instanciaitem) REFERENCES InstanciaItem (idInstanciaItem) ON DELETE CASCADE
+);
+
 CREATE TABLE IF NOT EXISTS Mochila (
   idMochila INT PRIMARY KEY DEFAULT nextval('mochila_id_seq'),
   capacidade INT NOT NULL,
