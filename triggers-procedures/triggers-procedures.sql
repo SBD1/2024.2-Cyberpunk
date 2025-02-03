@@ -6,11 +6,18 @@ BEGIN
     END IF;
 END $$;
 
+DROP TRIGGER IF EXISTS recompensa_normal_trigger ON InstanciaInimigo;
+DROP TRIGGER IF EXISTS recompensa_missao_trigger ON Missao;
+DROP TRIGGER IF EXISTS comprar_item_trigger ON Mercado_Item;
+
+DROP FUNCTION IF EXISTS recompensa_normal();
+DROP FUNCTION IF EXISTS recompensa_missao();
+DROP FUNCTION IF EXISTS comprar_item();
+
 CREATE FUNCTION recompensa_normal() RETURNS TRIGGER AS $recompensa_normal$
 DECLARE
     valor_recompensa INT;
 BEGIN
-
     SELECT valor INTO valor_recompensa
     FROM Recompensa
     WHERE fk_instancia_inimigo = OLD.idInstanciaInimigo;
@@ -27,6 +34,7 @@ BEGIN
 END;
 $recompensa_normal$ LANGUAGE plpgsql;
 
+-- Criar trigger para recompensa_normal
 CREATE TRIGGER recompensa_normal_trigger
 BEFORE DELETE ON InstanciaInimigo
 FOR EACH ROW EXECUTE FUNCTION recompensa_normal();
@@ -45,10 +53,10 @@ BEGIN
 END;
 $recompensa_missao$ LANGUAGE plpgsql;
 
+-- Criar trigger para recompensa_missao
 CREATE TRIGGER recompensa_missao_trigger
 AFTER UPDATE ON Missao
 FOR EACH ROW EXECUTE FUNCTION recompensa_missao();
-
 
 CREATE FUNCTION comprar_item() RETURNS TRIGGER AS $comprar_item$
 DECLARE
@@ -76,7 +84,7 @@ BEGIN
 END;
 $comprar_item$ LANGUAGE plpgsql;
 
--- Criando o trigger
+-- Criar trigger para comprar_item
 CREATE TRIGGER comprar_item_trigger
 BEFORE UPDATE ON Mercado_Item
 FOR EACH ROW EXECUTE FUNCTION comprar_item();
