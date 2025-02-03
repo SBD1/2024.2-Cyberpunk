@@ -53,36 +53,104 @@ class CyberLutador {
         await pool.query(updateQuery, [novaSalaNome, this.id]);
         
         if (novaSalaNome.toLowerCase() === "Cyber Mercado".toLowerCase()) {
-          await this.abrirMercado();
+          const query = 
+          `SELECT idMercadoClandestino FROM MercadoClandestino WHERE fk_sala = $1;`;
+          const values = [salaEncontrada.idsala];
+          const res = await pool.query(query, values);
+          const idMercado = res.rows[0].idmercadoclandestino;
+          await this.abrirMercado(idMercado);
         }
       } catch (error) {
         console.error("Erro ao mover para a sala:", error.message);
     }
   }
 
-  async abrirMercado() {
+  async abrirMercado(idMercado) {
     console.log("Você entrou no Cyber Mercado!");
     let opcao;
     do {
     console.log("1. Comprar itens");
-    console.log("2. Vender itens");
-    console.log("3. Sair do mercado");
+    //console.log("2. Vender itens");
+    console.log("2. Sair do mercado");
     opcao = prompt("Escolha uma opção: ");
     
     switch (opcao) {
       case "1":
-        await this.comprarItens();
+          const query = `
+              SELECT 
+                  i.idItem,
+                  i.nomeItem,
+                  i.valor AS preco
+              FROM Mercado_Item mi
+              JOIN InstanciaItem ii ON mi.fk_instanciaitem = ii.idInstanciaItem
+              JOIN Item i ON ii.fk_item = i.idItem
+              WHERE mi.fk_mercado_clandestino = $1;
+          `;
+  
+          try {
+              const { rows } = await pool.query(query, [idMercado]);
+  
+              if (rows.length === 0) {
+                  console.log("Este mercado não possui itens disponíveis.");
+                  return;
+              }
+  
+              console.log("\n Itens disponíveis no mercado:\n");
+  
+              // Armazena os IDs dos itens disponíveis
+              let itemIds = [];
+  
+              rows.forEach((item, index) => {
+                  console.log(`${index + 1}. ${item.nomeitem} - 💰 ${item.preco}`);
+                  itemIds.push(item.iditem); // Guarda os IDs dos itens
+              });
+
+              let escolha = parseInt(prompt("\nDigite o número do item que deseja comprar: "));
+  
+              // Verificar se a escolha é válida
+              if (isNaN(escolha) || escolha < 1 || escolha > itemIds.length) {
+                  console.log("Escolha inválida!");
+                  return;
+              }
+  
+              let idItemEscolhido = itemIds[escolha - 1]; // Pega o ID correspondente
+  
+              console.log(`Você escolheu: ${rows[escolha - 1].nomeitem}`);
+  
+              const queryUpdate = `
+                  UPDATE Mochila 
+                  SET fk_instanciaitem = $1 
+                  WHERE fk_cyberlutador = $2
+                  RETURNING *;
+              `;
+              const values = [idItemEscolhido, idCyberLutador];
+  
+              const resultado = await pool.query(queryUpdate, values);
+
+              const query = `
+              UPDATE Mercado_Item 
+              SET fk_mercado_clandestino = NULL
+              WHERE fk_instanciaitem = $1;
+              `
+              const valor = [idItemEscolhido];
+              await pool.query(query, values);
+
+              console.log("Item adquirido com sucesso!");
+
+    } catch (error) {
+        console.error("Erro ao listar os itens do mercado:", error.message);
+    }
         break;
+//      case "2":
+//        await this.venderItens();
+//        break;
       case "2":
-        await this.venderItens();
-        break;
-      case "3":
         console.log("Saindo do mercado...");
         break;
       default:
         console.log("Opção inválida.");
     }
-  } while (opcao !== "3");
+  } while (opcao !== "2");
 
 }
 }
