@@ -114,6 +114,62 @@ async function adicionarCyberLutador(nomeCyberLutador, fkSalaAtual) {
   }
 }
 
+async function getMissoes() {
+  try {
+    const res = await pool.query('SELECT * FROM Missao ORDER BY idMissao');
+    return res.rows;
+  } catch (error) {
+    console.error('Erro ao consultar as missões:', error);
+    throw error;
+  }
+}
+
+async function concluirMissao(idMissao) {
+  try {
+    const query = 'UPDATE Missao SET concluida = TRUE WHERE idMissao = $1 RETURNING *';
+    const res = await pool.query(query, [idMissao]);
+    return res.rows[0];
+  } catch (error) {
+    console.error('Erro ao concluir missão:', error);
+    throw error;
+  }
+}
+
+async function iniciarMissao(cyberLutador) {
+  const missoes = await getMissoes();
+  const missaoAtual = missoes.find(m => !m.concluida);
+
+  if (!missaoAtual) {
+    console.log("Todas as missões foram concluídas!");
+    return;
+  }
+
+  console.log(`\n=== Missão: ${missaoAtual.nomeMissao} ===`);
+  console.log(missaoAtual.descricao);
+
+  const tipoPuzzle = Math.random() > 0.5 ? 'matematica' : 'decodificador';
+  let puzzle;
+
+  if (tipoPuzzle === 'matematica') {
+    puzzle = gerarPuzzleMatematico();
+    console.log(puzzle.pergunta);
+  } else {
+    puzzle = gerarPuzzleDecodificador();
+    console.log(puzzle.dica);
+    console.log(`Palavra codificada: ${puzzle.palavraCodificada}`);
+  }
+
+  const respostaJogador = prompt("Digite sua resposta: ");
+  if (respostaJogador.toLowerCase() === String(puzzle.resposta).toLowerCase()) {
+    console.log("Parabéns! Você resolveu o puzzle.");
+    await concluirMissao(missaoAtual.idMissao);
+    console.log("Missão concluída! Próxima missão desbloqueada.");
+  } else {
+    console.log("Resposta incorreta. Tente novamente.");
+  }
+}
+
+
 async function init() {
   try {
     await waitForDatabase();

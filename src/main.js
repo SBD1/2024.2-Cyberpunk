@@ -1,4 +1,5 @@
 const { Pool } = require('pg');
+const prompt = require('prompt-sync')();
 
 const pool = new Pool({
   user: 'postgres',
@@ -8,7 +9,6 @@ const pool = new Pool({
   port: 5432,
 });
 
-const prompt = require('prompt-sync')();
 const { init, getSalas, getCyberLutadores, adicionarCyberLutador } = require('./index');
 
 let cyberlutadores = [];
@@ -29,12 +29,13 @@ class CyberLutador {
     this.nome = nomecyberLutador;
     this.salaAtual = nomeSala;
   }
+  
   async mover() {
     console.log("Salas disponíveis:");
     salasArray.forEach((s, index) => {
-        console.log(`${index + 1}.${s.nomesala}`);
+        console.log(`${index + 1}. ${s.nomesala}`);
     });
-    
+
     const novaSalaNome = prompt("Digite o nome da sala para onde deseja ir: ");
     
     const salaEncontrada = salasArray.find(s => s.nomesala === novaSalaNome);
@@ -44,16 +45,89 @@ class CyberLutador {
         return;
     }
 
-    this.salaAtual = novaSalaNome; 
+    this.salaAtual = novaSalaNome;
     console.log(`\nVocê está em: ${novaSalaNome}`);
     
     const updateQuery = `UPDATE CyberLutador SET fk_sala_atual = (SELECT idSala FROM Sala WHERE nomeSala = $1) WHERE idCyberLutador = $2;`;
-    
+
     try {
         await pool.query(updateQuery, [novaSalaNome, this.id]);
     } catch (error) {
         console.error("Erro ao mover para a sala:", error.message);
     }
+  }
+}
+
+function gerarPuzzleMatematico() {
+  const num1 = Math.floor(Math.random() * 500) + 100;
+  const num2 = Math.floor(Math.random() * 500) + 100;
+  const operacoes = ['+', '-', '*', '/'];
+  const operacao = operacoes[Math.floor(Math.random() * operacoes.length)];
+  let resultado;
+
+  switch (operacao) {
+    case '+': resultado = num1 + num2; break;
+    case '-': resultado = num1 - num2; break;
+    case '*': resultado = num1 * num2; break;
+    case '/': resultado = Math.floor(num1 / num2); break;
+  }
+
+  return { pergunta: `Resolva: ${num1} ${operacao} ${num2}`, resposta: resultado };
+}
+
+function gerarPuzzleDecodificador() {
+  const palavrasCyberpunk = ['neon', 'hacker', 'android', 'implante', 'circuito', 'ciborgue', 'edgerunner'];
+  const palavraEscolhida = palavrasCyberpunk[Math.floor(Math.random() * palavrasCyberpunk.length)];
+  
+  const alfabeto = 'abcdefghijklmnopqrstuvwxyz';
+  const mapeamento = {};
+  let numero = 1;
+
+  for (const letra of alfabeto) {
+    mapeamento[letra] = numero;
+    numero++;
+  }
+
+  let palavraCodificada = '';
+  for (const letra of palavraEscolhida) {
+    palavraCodificada += mapeamento[letra] + ' ';
+  }
+
+  return { dica: 'Cada letra do alfabeto corresponde a um número.', palavraCodificada, resposta: palavraEscolhida };
+}
+
+async function iniciarMissao(cyberLutador) {
+  console.log("\n=== Você iniciou uma missão! ===");
+
+  const historiaMissao = 
+  `Você foi convocado para uma missão crítica. Um sistema de inteligência artificial,
+  projetado para controlar as cidades cibernéticas, foi hackeado por uma facção desconhecida.
+  Seu objetivo é recuperar o controle do sistema resolvendo puzzles complexos.
+
+  A missão está dividida em dois desafios:
+  1. Resolva um puzzle matemático para hackear os sistemas de segurança.
+  2. Decodifique uma palavra codificada para liberar os dados secretos da facção.
+
+  Cada passo certo aproxima você do sucesso. Boa sorte, CyberLutador!`;
+  console.log(historiaMissao);
+
+  const tipoPuzzle = Math.random() > 0.5 ? 'matematica' : 'decodificador';
+  let puzzle;
+
+  if (tipoPuzzle === 'matematica') {
+      puzzle = gerarPuzzleMatematico();
+      console.log(puzzle.pergunta);
+  } else {
+      puzzle = gerarPuzzleDecodificador();
+      console.log(puzzle.dica);
+      console.log(`Palavra codificada: ${puzzle.palavraCodificada}`);
+  }
+
+  const respostaJogador = prompt("Digite sua resposta: ");
+  if (respostaJogador.toLowerCase() === String(puzzle.resposta).toLowerCase()) {
+      console.log("Parabéns! Você resolveu o puzzle.");
+  } else {
+      console.log("Resposta incorreta.");
   }
 }
 
@@ -71,7 +145,8 @@ async function iniciarJogo() {
     console.log("2. Criar um CyberLutador");
     console.log("3. Ver informações do CyberLutador");
     console.log("4. Mover para outra sala");
-    console.log("5. Sair do jogo");
+    console.log("5. Iniciar Missão");
+    console.log("6. Sair do jogo");
     opcao = prompt("Escolha uma opção: ");
 
     switch (opcao) {
@@ -89,7 +164,6 @@ async function iniciarJogo() {
         if (escolha >= 0 && escolha < cyberlutadores.length) {
           const escolhido = cyberlutadores[escolha];
           personagem = new CyberLutador(escolhido.idcyberlutador, escolhido.nomecyberlutador, escolhido.nomesala);
-          console.log("personagem", personagem);
           console.log(`Personagem ${personagem.nome} selecionado!`);
         } else {
           console.log("Escolha inválida.");
@@ -100,27 +174,27 @@ async function iniciarJogo() {
         const nomeCyberLutador = prompt("Digite o nome do CyberLutador: ");
         const nomeSalaAtual = "Laboratorio";
       
-          try {
-            const querySala = `SELECT idSala FROM Sala WHERE nomeSala = $1 LIMIT 1;`;
-            const valuesSala = [nomeSalaAtual];
-        
-            const resSala = await pool.query(querySala, valuesSala);
-        
-            if (resSala.rows.length === 0) {
-              throw new Error('Sala não encontrada');
-            }
-        
-            const fkSalaAtual = resSala.rows[0].idsala;
-            console.log(`ID da sala "${nomeSalaAtual}": ${fkSalaAtual}`);
-        
-            const novoCyberLutador = await adicionarCyberLutador(nomeCyberLutador, fkSalaAtual);
-            
-            personagem = new CyberLutador(novoCyberLutador.idCyberLutador, novoCyberLutador.nomeCyberLutador, fkSalaAtual);
-            console.log(`CyberLutador ${nomeCyberLutador} criado e posicionado na sala ${nomeSalaAtual}!`);
-          } catch (error) {
-            console.error("Erro ao criar o CyberLutador:", error.message);
+        try {
+          const querySala = `SELECT idSala FROM Sala WHERE nomeSala = $1 LIMIT 1;`;
+          const valuesSala = [nomeSalaAtual];
+    
+          const resSala = await pool.query(querySala, valuesSala);
+    
+          if (resSala.rows.length === 0) {
+            throw new Error('Sala não encontrada');
           }
-          break;
+    
+          const fkSalaAtual = resSala.rows[0].idsala;
+          console.log(`ID da sala "${nomeSalaAtual}": ${fkSalaAtual}`);
+    
+          const novoCyberLutador = await adicionarCyberLutador(nomeCyberLutador, fkSalaAtual);
+          
+          personagem = new CyberLutador(novoCyberLutador.idCyberLutador, novoCyberLutador.nomeCyberLutador, fkSalaAtual);
+          console.log(`CyberLutador ${nomeCyberLutador} criado e posicionado na sala ${nomeSalaAtual}!`);
+        } catch (error) {
+          console.error("Erro ao criar o CyberLutador:", error.message);
+        }
+        break;
 
       case "3":
         if (!personagem) {
@@ -168,18 +242,29 @@ async function iniciarJogo() {
           console.log("Você precisa selecionar um CyberLutador primeiro.");
           break;
         }
-        await personagem.mover(salasArray);
-
+        await personagem.mover();
         break;
       
       case "5":
-        console.log("Saindo do jogo...");
+        if (!personagem) {
+            console.log("Você precisa selecionar um CyberLutador primeiro.");
+        } else if (personagem.salaAtual !== "Laboratorio") {
+            console.log("Você precisa estar no Laboratório para iniciar a missão.");
+        } else {
+            await iniciarMissao(personagem);
+        }
         break;
-      
+
+      case "6":
+          console.log("Saindo do jogo...");
+          break;
+
       default:
-        console.log("Opção inválida.");
+          console.log("Opção inválida.");
+          break;
+      
     }
-  } while (opcao !== "5");
+  } while (opcao !== "6");
 }
 
 iniciarJogo();
