@@ -15,7 +15,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "boxen": "^8.0.1",
+    "chalk": "^5.4.1",
     "express": "^4.21.2",
-    "pg": "^8.13.1"
+    "pg": "^8.13.1",
+    "prompt-sync": "^4.2.0"
   }
 }
