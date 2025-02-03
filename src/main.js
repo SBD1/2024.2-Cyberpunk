@@ -1,4 +1,7 @@
 const { Pool } = require('pg');
+const prompt = require('prompt-sync')();
+const { init, getSalas, getCyberLutadores, adicionarCyberLutador } = require('./index');
+const { iniciarMissao, carregarProgressoMissao } = require('./missaoPuzzle');
 
 const pool = new Pool({
   user: 'postgres',
@@ -7,9 +10,6 @@ const pool = new Pool({
   password: 'password',
   port: 5432,
 });
-
-const prompt = require('prompt-sync')();
-const { init, getSalas, getCyberLutadores, adicionarCyberLutador } = require('./index');
 
 let cyberlutadores = [];
 let salas = {};
@@ -29,12 +29,13 @@ class CyberLutador {
     this.nome = nomecyberLutador;
     this.salaAtual = nomeSala;
   }
+  
   async mover() {
     console.log("Salas disponíveis:");
     salasArray.forEach((s, index) => {
-        console.log(`${index + 1}.${s.nomesala}`);
+        console.log(`${index + 1}. ${s.nomesala}`);
     });
-    
+
     const novaSalaNome = prompt("Digite o nome da sala para onde deseja ir: ");
     
     const salaEncontrada = salasArray.find(s => s.nomesala === novaSalaNome);
@@ -44,11 +45,11 @@ class CyberLutador {
         return;
     }
 
-    this.salaAtual = novaSalaNome; 
+    this.salaAtual = novaSalaNome;
     console.log(`\nVocê está em: ${novaSalaNome}`);
     
     const updateQuery = `UPDATE CyberLutador SET fk_sala_atual = (SELECT idSala FROM Sala WHERE nomeSala = $1) WHERE idCyberLutador = $2;`;
-    
+
     try {
         await pool.query(updateQuery, [novaSalaNome, this.id]);
         
@@ -169,7 +170,9 @@ async function iniciarJogo() {
     console.log("2. Criar um CyberLutador");
     console.log("3. Ver informações do CyberLutador");
     console.log("4. Mover para outra sala");
-    console.log("5. Sair do jogo");
+    console.log("5. Iniciar Missão");
+    console.log("6. Continuar Missão");
+    console.log("7. Sair do jogo");
     opcao = prompt("Escolha uma opção: ");
 
     switch (opcao) {
@@ -187,7 +190,6 @@ async function iniciarJogo() {
         if (escolha >= 0 && escolha < cyberlutadores.length) {
           const escolhido = cyberlutadores[escolha];
           personagem = new CyberLutador(escolhido.idcyberlutador, escolhido.nomecyberlutador, escolhido.nomesala);
-          console.log("personagem", personagem);
           console.log(`Personagem ${personagem.nome} selecionado!`);
         } else {
           console.log("Escolha inválida.");
@@ -198,27 +200,27 @@ async function iniciarJogo() {
         const nomeCyberLutador = prompt("Digite o nome do CyberLutador: ");
         const nomeSalaAtual = "Laboratorio";
       
-          try {
-            const querySala = `SELECT idSala FROM Sala WHERE nomeSala = $1 LIMIT 1;`;
-            const valuesSala = [nomeSalaAtual];
-        
-            const resSala = await pool.query(querySala, valuesSala);
-        
-            if (resSala.rows.length === 0) {
-              throw new Error('Sala não encontrada');
-            }
-        
-            const fkSalaAtual = resSala.rows[0].idsala;
-            console.log(`ID da sala "${nomeSalaAtual}": ${fkSalaAtual}`);
-        
-            const novoCyberLutador = await adicionarCyberLutador(nomeCyberLutador, fkSalaAtual);
-            
-            personagem = new CyberLutador(novoCyberLutador.idCyberLutador, novoCyberLutador.nomeCyberLutador, fkSalaAtual);
-            console.log(`CyberLutador ${nomeCyberLutador} criado e posicionado na sala ${nomeSalaAtual}!`);
-          } catch (error) {
-            console.error("Erro ao criar o CyberLutador:", error.message);
+        try {
+          const querySala = `SELECT idSala FROM Sala WHERE nomeSala = $1 LIMIT 1;`;
+          const valuesSala = [nomeSalaAtual];
+    
+          const resSala = await pool.query(querySala, valuesSala);
+    
+          if (resSala.rows.length === 0) {
+            throw new Error('Sala não encontrada');
           }
-          break;
+    
+          const fkSalaAtual = resSala.rows[0].idsala;
+          console.log(`ID da sala "${nomeSalaAtual}": ${fkSalaAtual}`);
+    
+          const novoCyberLutador = await adicionarCyberLutador(nomeCyberLutador, fkSalaAtual);
+          
+          personagem = new CyberLutador(novoCyberLutador.idCyberLutador, novoCyberLutador.nomeCyberLutador, fkSalaAtual);
+          console.log(`CyberLutador ${nomeCyberLutador} criado e posicionado na sala ${nomeSalaAtual}!`);
+        } catch (error) {
+          console.error("Erro ao criar o CyberLutador:", error.message);
+        }
+        break;
 
       case "3":
         if (!personagem) {
@@ -266,18 +268,66 @@ async function iniciarJogo() {
           console.log("Você precisa selecionar um CyberLutador primeiro.");
           break;
         }
-        await personagem.mover(salasArray);
-
+        await personagem.mover();
         break;
       
       case "5":
-        console.log("Saindo do jogo...");
-        break;
-      
+          if (!personagem) {
+              console.log("Você precisa selecionar um CyberLutador primeiro.");
+          } else {
+              // Verificar se já existe uma missão em andamento
+              const query = `
+                  SELECT idMissao FROM Missao
+                  WHERE fk_cyberlutador = $1 AND progresso != 'Concluída';
+              `;
+              const res = await pool.query(query, [personagem.id]);
+  
+              if (res.rows.length > 0) {
+                  console.log("Você já tem uma missão em andamento. Use a opção 'Continuar Missão'.");
+              } else {
+                  // Criar uma nova missão
+                  const insertQuery = `
+                      INSERT INTO Missao (nomeMissao, objetivo, progresso, fk_sala, fk_cyberlutador)
+                      VALUES ('Missão Principal', 'Recuperar o controle do sistema', '0/5', (SELECT idSala FROM Sala WHERE nomeSala = $1), $2)
+                      RETURNING idMissao;
+                  `;
+                  const insertRes = await pool.query(insertQuery, [personagem.salaAtual, personagem.id]);
+                  const idMissao = insertRes.rows[0].idmissao;
+  
+                  await iniciarMissao(personagem, pool, idMissao);
+              }
+          }
+          break;
+  
+      case "6":
+          if (!personagem) {
+              console.log("Você precisa selecionar um CyberLutador primeiro.");
+          } else {
+              // Verificar se existe uma missão em andamento
+              const query = `
+                  SELECT idMissao FROM Missao
+                  WHERE fk_cyberlutador = $1 AND progresso != 'Concluída';
+              `;
+              const res = await pool.query(query, [personagem.id]);
+  
+              if (res.rows.length === 0) {
+                  console.log("Você não tem uma missão em andamento. Use a opção 'Iniciar Missão'.");
+              } else {
+                  const idMissao = res.rows[0].idmissao;
+                  await iniciarMissao(personagem, pool, idMissao);
+              }
+          }
+          break;
+      case "7":
+          console.log("Saindo do jogo...");
+          break;
+
       default:
-        console.log("Opção inválida.");
+          console.log("Opção inválida.");
+          break;
+      
     }
-  } while (opcao !== "5");
+  } while (opcao !== "7");
 }
 
 iniciarJogo();
