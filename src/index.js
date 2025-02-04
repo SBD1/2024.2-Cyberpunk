@@ -2,6 +2,7 @@ const express = require('express');
 const { Pool } = require('pg');
 const path = require('path');
 const fs = require('fs');
+const { iniciarMissao } = require('./missaoPuzzle'); // Importando a função de missão
 const prompt = require('prompt-sync')();
 
 const app = express();
@@ -82,7 +83,6 @@ async function getCyberLutadores() {
       FROM CyberLutador c
       LEFT JOIN Sala s ON c.fk_sala_atual = s.idSala
     `);
-    // console.log("getcyber", res.rows);
     return res.rows;
   } catch (error) {
     console.error('Erro ao consultar os cyberlutadores:', error);
@@ -167,6 +167,27 @@ async function adicionarCyberLutador(nomeCyberLutador, fkSalaAtual) {
   }
 }
 
+async function getMissoes() {
+  try {
+    const res = await pool.query('SELECT * FROM Missao ORDER BY idMissao');
+    return res.rows;
+  } catch (error) {
+    console.error('Erro ao consultar as missões:', error);
+    throw error;
+  }
+}
+
+async function concluirMissao(idMissao) {
+  try {
+    const query = 'UPDATE Missao SET concluida = TRUE WHERE idMissao = $1 RETURNING *';
+    const res = await pool.query(query, [idMissao]);
+    return res.rows[0];
+  } catch (error) {
+    console.error('Erro ao concluir missão:', error);
+    throw error;
+  }
+}
+
 async function init() {
   try {
     await waitForDatabase();
@@ -191,7 +212,6 @@ async function init() {
     process.exit(1);
   }
 }
-
 async function startServer(port) {
   return new Promise((resolve, reject) => {
     app.listen(port, () => {
