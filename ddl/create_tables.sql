@@ -46,13 +46,6 @@ CREATE TABLE IF NOT EXISTS Sala (
   FOREIGN KEY (oeste) REFERENCES Sala (idSala) ON DELETE SET NULL
 );
 
-CREATE TABLE IF NOT EXISTS Item (
-  idItem INT PRIMARY KEY DEFAULT nextval('item_id_seq'),
-  nomeItem VARCHAR(50) NOT NULL,
-  descricao VARCHAR(255) NOT NULL,
-  valor INT NOT NULL
-);
-
 CREATE TABLE IF NOT EXISTS CyberLutador (
   idCyberLutador INT PRIMARY KEY DEFAULT nextval('cyberlutador_id_seq'),
   nomeCyberLutador VARCHAR(50) NOT NULL,
@@ -126,29 +119,67 @@ CREATE TABLE IF NOT EXISTS Faccao (
   FOREIGN KEY (fk_cyberlutador) REFERENCES CyberLutador (idCyberLutador) ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS Implante (
-  idImplante INT PRIMARY KEY DEFAULT nextval('implante_id_seq'),
-  nomeImplante VARCHAR(50) NOT NULL,
-  tipo VARCHAR(50) NOT NULL,
-  fk_item INT NOT NULL,
+CREATE TABLE IF NOT EXISTS Mochila (
+  idMochila INT PRIMARY KEY DEFAULT nextval('mochila_id_seq'),
+  capacidade INT NOT NULL,
   fk_cyberlutador INT NOT NULL,
-  FOREIGN KEY (fk_item) REFERENCES Item (idItem) ON DELETE CASCADE,
-  FOREIGN KEY (fk_cyberlutador) REFERENCES CyberLutador (idCyberLutador)
+  FOREIGN KEY (fk_cyberlutador) REFERENCES CyberLutador (idCyberLutador) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS Item (
+  idItem INT PRIMARY KEY DEFAULT nextval('item_id_seq'),
+  nomeItem VARCHAR(50) NOT NULL,
+  descricao VARCHAR(255) NOT NULL,
+  valor INT NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS InstanciaItem (
   idInstanciaItem INT PRIMARY KEY DEFAULT nextval('instancia_item_id_seq'),
   fk_item INT NOT NULL,
-  FOREIGN KEY (fk_item) REFERENCES Item (idItem)
+  fk_cyberlutador INT,
+  fk_mochila INT,
+  FOREIGN KEY (fk_item) REFERENCES Item (idItem),
+  FOREIGN KEY (fk_cyberlutador) REFERENCES CyberLutador (idCyberLutador),
+  FOREIGN KEY (fk_mochila) REFERENCES Mochila (idMochila)
 );
 
-CREATE TABLE IF NOT EXISTS Mochila (
-  idMochila INT PRIMARY KEY DEFAULT nextval('mochila_id_seq'),
-  capacidade INT NOT NULL,
-  fk_cyberlutador INT NOT NULL,
-  fk_instanciaitem INT NOT NULL,
-  FOREIGN KEY (fk_cyberlutador) REFERENCES CyberLutador (idCyberLutador) ON DELETE CASCADE,
-  FOREIGN KEY (fk_instanciaitem) REFERENCES InstanciaItem (idInstanciaItem) ON DELETE CASCADE
+CREATE TABLE IF NOT EXISTS Biochip (
+  idBiochip INT PRIMARY KEY DEFAULT nextval('biochip_id_seq'),
+  regeneraVida INT NOT NULL,
+  fk_item INT NOT NULL,
+  FOREIGN KEY (fk_item) REFERENCES Item (idItem) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS Implante (
+  idImplante INT PRIMARY KEY DEFAULT nextval('implante_id_seq'),
+  nomeImplante VARCHAR(50) NOT NULL,
+  tipo VARCHAR(50) NOT NULL,
+  fk_item INT NOT NULL,
+  FOREIGN KEY (fk_item) REFERENCES Item (idItem) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS VisaoCibernetica (
+  idVisaocibernetica INT PRIMARY KEY DEFAULT nextval('visaocibernetica_id_seq'),
+  fk_implante INT NOT NULL,
+  aumentaFurti INT NOT NULL,
+  aumentaPercep INT NOT NULL,
+  FOREIGN KEY (fk_implante) REFERENCES Implante (idImplante) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS BracoRobotico (
+  idBracorobotico INT PRIMARY KEY DEFAULT nextval('bracorobotico_id_seq'),
+  fk_implante INT NOT NULL,
+  aumentaForca INT NOT NULL,
+  aumentaVeloc INT NOT NULL,
+  FOREIGN KEY (fk_implante) REFERENCES Implante (idImplante) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS CapaceteNeural (
+  idCapaceteneural INT PRIMARY KEY DEFAULT nextval('capaceteneural_id_seq'),
+  fk_implante INT NOT NULL,
+  aumentaInt INT NOT NULL,
+  aumentaResis INT NOT NULL,
+  FOREIGN KEY (fk_implante) REFERENCES Implante (idImplante) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS Recompensa (
@@ -204,67 +235,9 @@ CREATE TABLE IF NOT EXISTS MercadoClandestino (
   FOREIGN KEY (fk_sala) REFERENCES Sala (idSala) ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS Mercado_Item (
-  fk_mercado_clandestino INT NOT NULL,
-  fk_instanciaitem INT NOT NULL,
-  PRIMARY KEY (fk_mercado_clandestino, fk_instanciaitem),
-  FOREIGN KEY (fk_mercado_clandestino) REFERENCES MercadoClandestino (idMercadoClandestino) ON DELETE CASCADE,
-  FOREIGN KEY (fk_instanciaitem) REFERENCES InstanciaItem (idInstanciaItem) ON DELETE CASCADE
-);
-
-CREATE TABLE IF NOT EXISTS Mochila (
-  idMochila INT PRIMARY KEY DEFAULT nextval('mochila_id_seq'),
-  capacidade INT NOT NULL,
-  fk_cyberlutador INT NOT NULL,
-  fk_instanciaitem INT NOT NULL,
-  FOREIGN KEY (fk_cyberlutador) REFERENCES CyberLutador (idCyberLutador) ON DELETE CASCADE,
-  FOREIGN KEY (fk_instanciaitem) REFERENCES InstanciaItem (idInstanciaItem) ON DELETE CASCADE
-);
-
 CREATE TABLE IF NOT EXISTS Carro (
   idCarro INT PRIMARY KEY DEFAULT nextval('carro_id_seq'),
   combustivel INT NOT NULL,
   fk_regiao INT NOT NULL,
   FOREIGN KEY (fk_regiao) REFERENCES Regiao (idRegiao) ON DELETE CASCADE
-);
-
-CREATE TABLE IF NOT EXISTS Implante (
-  idImplante INT PRIMARY KEY DEFAULT nextval('implante_id_seq'),
-  nomeImplante VARCHAR(50) NOT NULL,
-  tipo VARCHAR(50) NOT NULL,
-  fk_item INT NOT NULL,
-  fk_cyberlutador INT NOT NULL,
-  FOREIGN KEY (fk_item) REFERENCES Item (idItem) ON DELETE CASCADE,
-  FOREIGN KEY (fk_cyberlutador) REFERENCES CyberLutador (idCyberLutador)
-);
-
-CREATE TABLE IF NOT EXISTS Biochip (
-  idBiochip INT PRIMARY KEY DEFAULT nextval('biochip_id_seq'),
-  regeneraVida INT NOT NULL,
-  fk_item INT NOT NULL,
-  FOREIGN KEY (fk_item) REFERENCES Item (idItem) ON DELETE CASCADE
-);
-
-CREATE TABLE IF NOT EXISTS VisaoCibernetica (
-  idVisaocibernetica INT PRIMARY KEY DEFAULT nextval('visaocibernetica_id_seq'),
-  fk_implante INT NOT NULL,
-  aumentaFurti INT NOT NULL,
-  aumentaPercep INT NOT NULL,
-  FOREIGN KEY (fk_implante) REFERENCES Implante (idImplante) ON DELETE CASCADE
-);
-
-CREATE TABLE IF NOT EXISTS BracoRobotico (
-  idBracorobotico INT PRIMARY KEY DEFAULT nextval('bracorobotico_id_seq'),
-  fk_implante INT NOT NULL,
-  aumentaForca INT NOT NULL,
-  aumentaVeloc INT NOT NULL,
-  FOREIGN KEY (fk_implante) REFERENCES Implante (idImplante) ON DELETE CASCADE
-);
-
-CREATE TABLE IF NOT EXISTS CapaceteNeural (
-  idCapaceteneural INT PRIMARY KEY DEFAULT nextval('capaceteneural_id_seq'),
-  fk_implante INT NOT NULL,
-  aumentaInt INT NOT NULL,
-  aumentaResis INT NOT NULL,
-  FOREIGN KEY (fk_implante) REFERENCES Implante (idImplante) ON DELETE CASCADE
 );
