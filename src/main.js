@@ -2,6 +2,7 @@ const { Pool } = require('pg');
 const prompt = require('prompt-sync')();
 const { init, getSalas, getCyberLutadores, adicionarCyberLutador } = require('./index');
 const { iniciarMissao, carregarProgressoMissao } = require('./missaoPuzzle');
+const { abrirMercado } = require('./mercado');
 
 const pool = new Pool({
   user: 'postgres',
@@ -59,101 +60,12 @@ class CyberLutador {
           const values = [salaEncontrada.idsala];
           const res = await pool.query(query, values);
           const idMercado = res.rows[0].idmercadoclandestino;
-          await this.abrirMercado(idMercado);
+          await abrirMercado(idMercado, this);
         }
       } catch (error) {
         console.error("Erro ao mover para a sala:", error.message);
     }
   }
-
-  async abrirMercado(idMercado) {
-    console.log("Você entrou no Cyber Mercado!");
-    let opcao;
-    do {
-    console.log("1. Comprar itens");
-    //console.log("2. Vender itens");
-    console.log("2. Sair do mercado");
-    opcao = prompt("Escolha uma opção: ");
-    
-    switch (opcao) {
-      case "1":
-          const query = `
-              SELECT 
-                  i.idItem,
-                  i.nomeItem,
-                  i.valor AS preco
-              FROM Mercado_Item mi
-              JOIN InstanciaItem ii ON mi.fk_instanciaitem = ii.idInstanciaItem
-              JOIN Item i ON ii.fk_item = i.idItem
-              WHERE mi.fk_mercado_clandestino = $1;
-          `;
-  
-          try {
-              const { rows } = await pool.query(query, [idMercado]);
-  
-              if (rows.length === 0) {
-                  console.log("Este mercado não possui itens disponíveis.");
-                  return;
-              }
-  
-              console.log("\n Itens disponíveis no mercado:\n");
-  
-              // Armazena os IDs dos itens disponíveis
-              let itemIds = [];
-  
-              rows.forEach((item, index) => {
-                  console.log(`${index + 1}. ${item.nomeitem} - ${item.preco}`);
-                  itemIds.push(item.iditem); // Guarda os IDs dos itens
-              });
-
-              let escolha = parseInt(prompt("\nDigite o número do item que deseja comprar: "));
-  
-              // Verificar se a escolha é válida
-              if (isNaN(escolha) || escolha < 1 || escolha > itemIds.length) {
-                  console.log("Escolha inválida!");
-                  return;
-              }
-  
-              let idItemEscolhido = itemIds[escolha - 1]; // Pega o ID correspondente
-  
-              console.log(`Você escolheu: ${rows[escolha - 1].nomeitem}`);
-  
-              const queryUpdate = `
-                  UPDATE Mochila 
-                  SET fk_instanciaitem = $1 
-                  WHERE fk_cyberlutador = $2
-                  RETURNING *;
-              `;
-              const values = [idItemEscolhido, idCyberLutador];
-  
-              const resultado = await pool.query(queryUpdate, values);
-
-              const query = `
-              UPDATE Mercado_Item 
-              SET fk_mercado_clandestino = NULL
-              WHERE fk_instanciaitem = $1;
-              `
-              const valor = [idItemEscolhido];
-              await pool.query(query, values);
-
-              console.log("Item adquirido com sucesso!");
-
-    } catch (error) {
-        console.error("Erro ao listar os itens do mercado:", error.message);
-    }
-        break;
-//      case "2":
-//        await this.venderItens();
-//        break;
-      case "2":
-        console.log("Saindo do mercado...");
-        break;
-      default:
-        console.log("Opção inválida.");
-    }
-  } while (opcao !== "2");
-
-}
 }
 
 async function iniciarJogo() {
@@ -165,7 +77,7 @@ async function iniciarJogo() {
   let opcao;
 
   do {
-    console.log("\n=== Bem-vindo ao CyberBase ===");
+    console.log("\n========================= Bem-vindo ao CyberBase =========================");
     console.log("1. Selecionar CyberLutador");
     console.log("2. Criar um CyberLutador");
     console.log("3. Ver informações do CyberLutador");
@@ -237,41 +149,37 @@ async function iniciarJogo() {
             const values = [personagem.id];
 
             const res = await pool.query(query, values);
-
-            if (res.rows.length === 0) {
+            if (res.rows.length > 0) {
+              const cyberLutadorInfo = res.rows[0];
+              console.log(`
+                CyberLutador: ${cyberLutadorInfo.nomecyberlutador}
+                Sala Atual: ${cyberLutadorInfo.nomesala}
+                Força: ${cyberLutadorInfo.forca}
+                Inteligência: ${cyberLutadorInfo.inteligencia}
+                Velocidade: ${cyberLutadorInfo.velocidade}
+                Furtividade: ${cyberLutadorInfo.furtividade}
+                Percepção: ${cyberLutadorInfo.percepcao}
+                Resistência: ${cyberLutadorInfo.resistencia}
+                Vida: ${cyberLutadorInfo.vida}
+              `);
+            } else {
               console.log("CyberLutador não encontrado.");
-              return;
             }
-
-            const cyberLutador = res.rows[0];
-            
-            console.log("\n=== Informações do CyberLutador ===");
-            console.log(`Nome: ${cyberLutador.nomecyberlutador}`);
-            console.log(`Sala Atual: ${cyberLutador.nomesala}`);
-            console.log(`ID: ${cyberLutador.idcyberlutador}`);
-            console.log(`Inteligência: ${cyberLutador.inteligencia}`);
-            console.log(`Resistência: ${cyberLutador.resistencia}`);
-            console.log(`Furtividade: ${cyberLutador.furtividade}`);
-            console.log(`Percepção: ${cyberLutador.percepcao}`);
-            console.log(`Vida: ${cyberLutador.vida}`);
-            console.log(`Velocidade: ${cyberLutador.velocidade}`);
-            console.log(`Força: ${cyberLutador.forca}`);
-            
           } catch (error) {
-            console.error("Erro ao buscar informações do CyberLutador:", error.message);
+            console.error("Erro ao buscar informações:", error.message);
           }
         }
         break;
 
       case "4":
         if (!personagem) {
-          console.log("Você precisa selecionar um CyberLutador primeiro.");
-          break;
+          console.log("Selecione um CyberLutador primeiro.");
+        } else {
+          await personagem.mover();
         }
-        await personagem.mover();
         break;
-      
-        case "5":
+
+      case "5":
         if (!personagem) {
             console.log("Você precisa selecionar um CyberLutador primeiro.");
         } else if (personagem.salaAtual !== "Laboratorio") {
@@ -307,7 +215,6 @@ async function iniciarJogo() {
         } else if (personagem.salaAtual !== "Laboratorio") {
             console.log("Você precisa estar no Laboratório para continuar a missão.");
         } else {
-          
             const query = `
                 SELECT idMissao FROM Missao
                 WHERE fk_cyberlutador = $1 AND progresso != 'Concluída';
@@ -322,14 +229,14 @@ async function iniciarJogo() {
             }
         }
         break;
+
       case "7":
-          console.log("Saindo do jogo...");
-          break;
+        console.log("Saindo do jogo...");
+        break;
 
       default:
-          console.log("Opção inválida.");
-          break;
-      
+        console.log("Opção inválida.");
+        break;
     }
   } while (opcao !== "7");
 }
