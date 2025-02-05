@@ -29,51 +29,53 @@ async function obterDialogoNPC(nomeNPC, nomeDialogo) {
         return { nomeDialogo: 'Erro', descricao: `${nomeNPC} não tem nenhum conselho para oferecer agora.` };
     }
 }
-
 async function interagirComNPC(nomeNPC, nomeDialogo, opcoes, idCyberLutador) {
-    console.log("\n=================", `Você encontrou ${nomeNPC}`, "=================\n");
-    opcoes.forEach((opcao, index) => {
-        console.log(`${index + 1}. ${opcao}`);
-    });
+	let continuarInteracao = true;
+	while (continuarInteracao) {
+			console.log("\n=====", `Você encontrou ${nomeNPC}`, "=====\n");
+			opcoes.forEach((opcao, index) => {
+					console.log(`${index + 1}. ${opcao}`);
+			});
 
-    const opcaoNPC = prompt("Escolha uma opção: ");
+			const opcaoNPC = prompt("\nEscolha uma opção: ");
 
-    switch (opcaoNPC) {
-        case "1":
-            if (nomeNPC === "Neon") {
-                console.log("\nNeon serve uma drink marguerita e diz: 'Aqui, um brinde pode valer mais que ouro.'");
-            } else if (nomeNPC === "Shade") {
-                console.log("\nShade te oferece uma bebida escura e forte, com um sorriso enigmático.");
-            } else if (nomeNPC === "Dr. Cipher") {
-                console.log("\nDr. Cipher ajusta seus óculos e diz: 'Você escolheu a ciência, beba esse conhecimento.'");
-            }
-            break;
-        case "2":
-            const { nomedialogo, descricao } = await obterDialogoNPC(nomeNPC, nomeDialogo);
-            console.log(`\n${nomedialogo}\n\n${descricao}`);
-            if (nomeNPC === "Neon") {
-                await atualizarAtributosCyberLutador(idCyberLutador, 'Neon');
-            } else if(nomeNPC === "Shade") {
-                await atualizarAtributosCyberLutador(idCyberLutador, 'Shade');
-            } else if (nomeNPC === "Dr. Cipher"){
-                await atualizarAtributosCyberLutador(idCyberLutador, 'Dr. Cipher');
-            }
-            break;
-        case "3":
-            if (nomeNPC === "Neon") {
-                console.log("\nNeon te olha com um sorriso enigmático e diz: 'O destino é um jogo, você apenas precisa decidir qual aposta fazer.'");
-            } else if (nomeNPC === "Shade") {
-                console.log("\nShade te observa com seus olhos penetrantes e murmura: 'O destino... ou você o controla, ou ele o controla.'");
-            } else if (nomeNPC === "Dr. Cipher") {
-                console.log("\nDr. Cipher olha para você com uma expressão analítica e diz: 'O destino é feito de códigos, e você precisa entender como programá-lo.'");
-            }
-            break;
-        case "4":
-            console.log(`Você decide não interagir com ${nomeNPC}.`);
-            break;
-        default:
-            console.log("Opção inválida.");
-    }
+			switch (opcaoNPC) {
+					case "1":
+							if (nomeNPC === "Neon") {
+									console.log("\nNeon serve uma marguerita e diz: 'Aqui, um brinde pode valer mais que ouro.'");
+							} else if (nomeNPC === "Shade") {
+									console.log("\nShade te oferece uma bebida escura e forte, com um sorriso enigmático.");
+							} else if (nomeNPC === "Dr. Cipher") {
+									console.log("\nDr. Cipher ajusta seus óculos e diz: 'Você escolheu a ciência, beba esse conhecimento.'");
+							}
+							break;
+					case "2":
+							const { nomedialogo, descricao } = await obterDialogoNPC(nomeNPC, nomeDialogo);
+							console.log(`\n${nomedialogo}\n\n${descricao}`);
+							if (nomeNPC === "Neon") {
+									await atualizarAtributosCyberLutador(idCyberLutador, 'Neon');
+							} else if(nomeNPC === "Shade") {
+									await atualizarAtributosCyberLutador(idCyberLutador, 'Shade');
+							}
+							break;
+					case "3":
+						if (nomeNPC === "Neon") {
+								console.log("\nNeon te olha com um sorriso enigmático e diz: 'O destino é um jogo, você apenas precisa decidir qual aposta fazer.'");
+						} else if (nomeNPC === "Shade") {
+								console.log("\nShade te observa com seus olhos penetrantes e murmura: 'O destino... ou você o controla, ou ele o controla.'");
+						} else if (nomeNPC === "Dr. Cipher") {
+								console.log("\nDr. Cipher olha para você com uma expressão analítica e diz: 'O destino é feito de códigos, e você precisa entender como programá-lo.'");
+						}
+						break;
+					case "4":
+							console.log("\nVocê decidiu encerrar a interação.");
+							continuarInteracao = false;
+							break;
+					default:
+							console.log("\nOpção inválida. Tente novamente.");
+							break;
+			}
+	}
 }
 
 async function interagirComNeon(idCyberLutador) {
@@ -106,7 +108,6 @@ async function interagirComCipher(idCyberLutador) {
     await interagirComNPC('Dr. Cipher', 'Então, você quer respostas?', opcoes, idCyberLutador);
 }
 
-
 async function atualizarAtributosCyberLutador(idCyberLutador, nomeNPC) {
     const verificarAtributosQuery = 
         `SELECT vida, inteligencia, resistencia, furtividade, percepcao 
@@ -118,7 +119,7 @@ async function atualizarAtributosCyberLutador(idCyberLutador, nomeNPC) {
         FROM Mentor 
         WHERE fk_npc = (SELECT idNPC FROM NPC WHERE nomeNPC = $1) LIMIT 1`;
 
-    console.log("idCyberLutador", idCyberLutador, "nomeNPC", nomeNPC);
+    // console.log("idCyberLutador", idCyberLutador, "nomeNPC", nomeNPC);
 
     try {
         const resultadoAtributos = await pool.query(verificarAtributosQuery, [idCyberLutador]);
@@ -129,11 +130,11 @@ async function atualizarAtributosCyberLutador(idCyberLutador, nomeNPC) {
 
         const { inteligencia, furtividade, percepcao } = resultadoAtributos.rows[0];
 
-        console.log("Atributos do CyberLutador:", { inteligencia, furtividade, percepcao });
+        // console.log("Atributos do CyberLutador:", { inteligencia, furtividade, percepcao });
 
         const resultadoIncrementos = await pool.query(obterIncrementosQuery, [nomeNPC]);
 
-        console.log("Resultado dos Incrementos:", resultadoIncrementos.rows);
+        // console.log("Resultado dos Incrementos:", resultadoIncrementos.rows);
 
         if (resultadoIncrementos.rows.length === 0) {
             console.error(`Nenhum mentor encontrado para o NPC ${nomeNPC}.`);
@@ -142,7 +143,7 @@ async function atualizarAtributosCyberLutador(idCyberLutador, nomeNPC) {
 
         const { aumentainteligencia, aumentafurtividade, aumentapercepcao } = resultadoIncrementos.rows[0];
 
-        console.log(`Incrementos de Mentor para ${nomeNPC}:`, { aumentainteligencia, aumentafurtividade, aumentapercepcao });
+        // console.log(`Incrementos de Mentor para ${nomeNPC}:`, { aumentainteligencia, aumentafurtividade, aumentapercepcao });
 
         if (aumentainteligencia === undefined || aumentafurtividade === undefined || aumentapercepcao === undefined) {
             console.error(`Os incrementos para o NPC ${nomeNPC} estão indefinidos.`);
@@ -153,7 +154,7 @@ async function atualizarAtributosCyberLutador(idCyberLutador, nomeNPC) {
         const novaFurtividade = (parseInt(furtividade) || 0) + (parseInt(aumentafurtividade) || 0);
         const novaPercepcao = (parseInt(percepcao) || 0) + (parseInt(aumentapercepcao) || 0);
 
-        console.log("Novos atributos calculados:", { novaInteligencia, novaFurtividade, novaPercepcao });
+        // console.log("Novos atributos calculados:", { novaInteligencia, novaFurtividade, novaPercepcao });
 
         const updateAtributosQuery = 
             `UPDATE CyberLutador
@@ -164,12 +165,15 @@ async function atualizarAtributosCyberLutador(idCyberLutador, nomeNPC) {
             novaInteligencia, novaFurtividade, novaPercepcao, idCyberLutador
         ]);
 
-        const atributosAtualizados = await pool.query(verificarAtributosQuery, [idCyberLutador]);
+        // const atributosAtualizados = await pool.query(verificarAtributosQuery, [idCyberLutador]);
 
-        console.log("Atributos após atualização:");
-        console.log("Inteligência:", atributosAtualizados.rows[0].inteligencia);
-        console.log("Furtividade:", atributosAtualizados.rows[0].furtividade);
-        console.log("Percepção:", atributosAtualizados.rows[0].percepcao);
+        console.log("\nSua inteligência aumentou em", aumentainteligencia);
+				console.log("Sua percepção aumentou em", aumentapercepcao);
+        console.log("Sua furtividade aumentou em", aumentafurtividade);
+
+        // console.log("Inteligência:", atributosAtualizados.rows[0].inteligencia);
+        // console.log("Furtividade:", atributosAtualizados.rows[0].furtividade);
+        // console.log("Percepção:", atributosAtualizados.rows[0].percepcao);
 
     } catch (err) {
         console.error("Erro ao atualizar os atributos:", err);

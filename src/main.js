@@ -33,48 +33,47 @@ class CyberLutador {
   }
   
   async mover() {
-    console.log("Salas disponíveis:");
+    console.log("Locais disponíveis:");
     salasArray.forEach((s, index) => {
-        console.log(`${index + 1}. ${s.nomesala}`);
+      console.log(`${index + 1}. ${s.nomesala}`);
     });
-
-    const novaSalaNome = prompt("Digite o nome da sala para onde deseja ir: ");
-    
-    const salaEncontrada = salasArray.find(s => s.nomesala === novaSalaNome);
-
-    if (!salaEncontrada) {
-        console.log("Sala não encontrada.");
-        return;
+  
+    const numeroSala = parseInt(prompt("Digite o número do local para onde deseja ir: "), 10) - 1;
+  
+    if (numeroSala < 0 || numeroSala >= salasArray.length) {
+      console.log("Número do local inválido.");
+      return;
     }
-
-    this.salaAtual = novaSalaNome;
-    console.log(`\nVocê está em: ${novaSalaNome}`);
+  
+    const salaEncontrada = salasArray[numeroSala];
+    this.salaAtual = salaEncontrada.nomesala;
+    console.log(`\n========================= Você está em: ${this.salaAtual} =========================`);
     
     const updateQuery = `UPDATE CyberLutador SET fk_sala_atual = (SELECT idSala FROM Sala WHERE nomeSala = $1) WHERE idCyberLutador = $2;`;
-
+  
     try {
-        await pool.query(updateQuery, [novaSalaNome, this.id]);
-
-        if (novaSalaNome.toLowerCase() === "SkyBar Holográfico".toLowerCase()) {
-          await interagirComNeon(this.id);
-        }
-        if (novaSalaNome.toLowerCase() === "Beco Data Stream".toLowerCase()) {
-          await interagirComShade(this.id);
-        }
-        if (novaSalaNome.toLowerCase() === "Laboratorio".toLowerCase()) {
-          await interagirComCipher(this.id);
-        }
-        
-        if (novaSalaNome.toLowerCase() === "Cyber Mercado".toLowerCase()) {
-          const query = 
-          `SELECT idMercadoClandestino FROM MercadoClandestino WHERE fk_sala = $1;`;
-          const values = [salaEncontrada.idsala];
-          const res = await pool.query(query, values);
-          const idMercado = res.rows[0].idmercadoclandestino;
-          await abrirMercado(idMercado, this);
-        }
-      } catch (error) {
-        console.error("Erro ao mover para a sala:", error.message);
+      await pool.query(updateQuery, [this.salaAtual, this.id]);
+  
+      if (this.salaAtual.toLowerCase() === "SkyBar Holográfico".toLowerCase()) {
+        await interagirComNeon(this.id);
+      }
+      if (this.salaAtual.toLowerCase() === "Beco Data Stream".toLowerCase()) {
+        await interagirComShade(this.id);
+      }
+      if (this.salaAtual.toLowerCase() === "Laboratorio".toLowerCase()) {
+        await interagirComCipher(this.id);
+      }
+  
+      if (this.salaAtual.toLowerCase() === "Cyber Mercado".toLowerCase()) {
+        const query = 
+        `SELECT idMercadoClandestino FROM MercadoClandestino WHERE fk_sala = $1;`;
+        const values = [salaEncontrada.idSala];
+        const res = await pool.query(query, values);
+        const idMercado = res.rows[0].idmercadoclandestino;
+        await abrirMercado(idMercado, this);
+      }
+    } catch (error) {
+      console.error("Erro ao tentar se deslocar:", error.message);
     }
   }
 }

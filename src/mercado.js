@@ -12,12 +12,12 @@ const pool = new Pool({
 });
 
 async function abrirMercado(idMercado, personagem) {
-  console.log("Você entrou no Cyber Mercado!");
+  console.log("\nO que deseja fazer?\n");
   let opcao;
   do {
     console.log("1. Comprar itens");
     console.log("2. Sair do mercado");
-    opcao = prompt("Escolha uma opção: ");
+    opcao = prompt("\nEscolha uma opção: ");
     
     switch (opcao) {
       case "1":
@@ -27,7 +27,7 @@ async function abrirMercado(idMercado, personagem) {
         console.log("Saindo do mercado...");
         break;
       default:
-        console.log("Opção inválida.");
+        console.log("\nOpção inválida.");
     }
   } while (opcao !== "2");
 }
