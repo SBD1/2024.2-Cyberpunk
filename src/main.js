@@ -33,15 +33,15 @@ class CyberLutador {
   }
   
   async mover() {
-    console.log("Salas disponíveis:");
+    console.log("Locais disponíveis:");
     salasArray.forEach((s, index) => {
       console.log(`${index + 1}. ${s.nomesala}`);
     });
   
-    const numeroSala = parseInt(prompt("Digite o número da sala para onde deseja ir: "), 10) - 1;
+    const numeroSala = parseInt(prompt("Digite o número do local para onde deseja ir: "), 10) - 1;
   
     if (numeroSala < 0 || numeroSala >= salasArray.length) {
-      console.log("Número da sala inválido.");
+      console.log("Número do local inválido.");
       return;
     }
   
@@ -73,7 +73,7 @@ class CyberLutador {
         await abrirMercado(idMercado, this);
       }
     } catch (error) {
-      console.error("Erro ao mover para a sala:", error.message);
+      console.error("Erro ao tentar se deslocar:", error.message);
     }
   }
 }
