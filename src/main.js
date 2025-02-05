@@ -3,6 +3,7 @@ const prompt = require('prompt-sync')();
 const { init, getSalas, getCyberLutadores, adicionarCyberLutador } = require('./index');
 const { iniciarMissao, carregarProgressoMissao } = require('./missaoPuzzle');
 const { abrirMercado } = require('./mercado');
+const { interagirComNeon, interagirComShade, interagirComCipher } = require('./mentor');
 
 const pool = new Pool({
   user: 'postgres',
@@ -53,6 +54,16 @@ class CyberLutador {
 
     try {
         await pool.query(updateQuery, [novaSalaNome, this.id]);
+
+        if (novaSalaNome.toLowerCase() === "SkyBar Holográfico".toLowerCase()) {
+          await interagirComNeon(this.id);
+        }
+        if (novaSalaNome.toLowerCase() === "Beco Data Stream".toLowerCase()) {
+          await interagirComShade(this.id);
+        }
+        if (novaSalaNome.toLowerCase() === "Laboratorio".toLowerCase()) {
+          await interagirComCipher(this.id);
+        }
         
         if (novaSalaNome.toLowerCase() === "Cyber Mercado".toLowerCase()) {
           const query = 

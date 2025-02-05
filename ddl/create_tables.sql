@@ -113,7 +113,8 @@ CREATE TABLE IF NOT EXISTS Puzzle (
 
 CREATE TABLE IF NOT EXISTS Dialogo (
   idDialogo INT PRIMARY KEY DEFAULT nextval('dialogo_id_seq'),
-  nomeDialogo VARCHAR(30) NOT NULL,
+  nomeDialogo VARCHAR(255) NOT NULL,
+  descricao TEXT NOT NULL,
   fk_npc INT NOT NULL,
   FOREIGN KEY (fk_npc) REFERENCES NPC (idNPC) ON DELETE CASCADE
 );
