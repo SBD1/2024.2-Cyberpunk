@@ -51,7 +51,8 @@ async function getSalas() {
       SELECT *
       FROM Sala s
       LEFT JOIN Regiao r ON s.fk_regiao = r.idRegiao
-    `);
+      WHERE s.nomeSala != 'Cemiterio Digital'  -- Para não aparecer o local onde os inimigos estão
+  `);
     return res.rows;
   } catch (error) {
     console.error('Erro ao consultar as salas:', error);
@@ -100,7 +101,7 @@ async function adicionarCyberLutador(nomeCyberLutador, fkSalaAtual) {
         (nomeCyberLutador, inteligencia, resistencia, furtividade, percepcao, vida, velocidade, forca, fk_sala_atual)
       VALUES 
         ($1, $2, $3, $4, $5, $6, $7, $8, $9)
-      RETURNING idCyberLutador;
+      RETURNING idcyberlutador;
     `;
     const valuesInsercao = [
       nomeCyberLutador, inteligencia, resistencia, furtividade, percepcao, vida, velocidade, forca, fkSalaAtual
@@ -202,6 +203,9 @@ async function init() {
 
     console.log('Inserindo Mercado...');
     await executeSQLFile(path.join(__dirname, '../dml/insert_mercado.sql'));
+
+    console.log('Inserindo NPCs...');
+    await executeSQLFile(path.join(__dirname, '../dml/insert_npc.sql'));
 
     console.log('Inserindo Triggers e Procedures...');
     await executeSQLFile(path.join(__dirname, '../triggers-procedures/triggers-procedures.sql'));
