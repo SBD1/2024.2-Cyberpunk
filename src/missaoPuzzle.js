@@ -18,7 +18,6 @@ function gerarPuzzleMatematico() {
     return { pergunta: `Resolva: ${num1} ${operacao} ${num2}\n`, resposta: resultado };
 }
 
-
 function gerarPuzzleDecodificador() {
     const palavrasCyberpunk = ['neon', 'hacker', 'android', 'implante', 'circuito', 'ciborgue', 'edgerunner'];
     const palavraEscolhida = palavrasCyberpunk[Math.floor(Math.random() * palavrasCyberpunk.length)];
@@ -40,7 +39,6 @@ function gerarPuzzleDecodificador() {
     return { dica: '\nCada letra do alfabeto corresponde a um número.\n', palavraCodificada, resposta: palavraEscolhida };
 }
 
-// Função para salvar o progresso da missão no banco de dados
 async function salvarProgressoMissao(pool, idMissao, progresso) {
     const query = `
         UPDATE Missao
@@ -50,7 +48,6 @@ async function salvarProgressoMissao(pool, idMissao, progresso) {
     await pool.query(query, [progresso, idMissao]);
 }
 
-// Função para carregar o progresso da missão do banco de dados
 async function carregarProgressoMissao(pool, idMissao) {
     const query = `
         SELECT progresso FROM Missao
@@ -60,14 +57,36 @@ async function carregarProgressoMissao(pool, idMissao) {
     return res.rows[0] ? res.rows[0].progresso : null;
 }
 
+async function verificarMissaoConcluida(pool, idCyberLutador) {
+    const query = `
+        SELECT COUNT(DISTINCT fk_sala) AS totalConcluidas FROM Missao
+        WHERE fk_cyberlutador = $1 AND progresso = 'Concluída'
+        AND nomeMissao IN ('Missão Principal', 'Missão Secundária', 'Missão Terciária');
+    `;
+    const res = await pool.query(query, [idCyberLutador]);
+    return res.rows[0].totalconcluidas; // Retorna o número de missões principais concluídas em salas diferentes
+}
+
+async function aplicarRecompensa(pool, idCyberLutador) {
+    const query = `
+        UPDATE Mochila
+        SET dinheiro = dinheiro + 50
+        WHERE fk_cyberlutador = $1;
+    `;
+    await pool.query(query, [idCyberLutador]);
+    console.log("\nVocê recebeu 50 unidades de dinheiro como recompensa!");
+}
 
 async function iniciarMissao(cyberLutador, pool, idMissao) {
     console.log("\n    ========================= Você iniciou uma missão! ============================");
 
     const historiaMissao =
-        `\n    Você foi convocado para uma missão crítica. Um sistema de inteligência artificial,
-    projetado para controlar as cidades cibernéticas, foi hackeado por uma facção desconhecida.
-    Seu objetivo é recuperar o controle do sistema resolvendo puzzles complexos.
+        `\n    Você foi convocado para uma missão crítica. Um sistema de inteligência artificial, projetado para controlar 
+    as cidades cibernéticas, foi hackeado por uma facção desconhecida. Se não for restaurado a tempo, o caos tomará conta das ruas digitais.
+
+    Para recuperar o controle, você deve completar 3 missões, cada uma localizada em uma sala diferente. 
+    
+    Cada sala contém um puzzle desafiador que testa sua lógica e habilidade.
 
     Cada passo certo aproxima você do sucesso. Boa sorte, CyberLutador!\n`;
     console.log(historiaMissao);
@@ -75,7 +94,6 @@ async function iniciarMissao(cyberLutador, pool, idMissao) {
     const totalPuzzlesNecessarios = 5; 
     let puzzlesResolvidos = 0;
 
-    
     const progresso = await carregarProgressoMissao(pool, idMissao);
     if (progresso && progresso !== 'Concluída') {
         puzzlesResolvidos = parseInt(progresso.split('/')[0], 10);
@@ -114,11 +132,25 @@ async function iniciarMissao(cyberLutador, pool, idMissao) {
 
     console.log("\nParabéns! Você concluiu a missão!");
     await salvarProgressoMissao(pool, idMissao, 'Concluída');
+
+    // Aplicar recompensa ao completar a missão
+    await aplicarRecompensa(pool, cyberLutador.id);
+
+    // Verificar se o jogador completou 3 missões em salas diferentes
+    const totalMissõesConcluidas = await verificarMissaoConcluida(pool, cyberLutador.id);
+    console.log(`Total de missões concluídas: ${totalMissõesConcluidas}`); // Debug: Mostrar o total de missões principais concluídas
+
+    if (totalMissõesConcluidas === 3) {
+        console.log("\nParabéns! Você concluiu todas as 3 missões principais e salvou o mundo cibernético!");
+        console.log("Fim do jogo.");
+        process.exit(0); // Encerra o jogo
+    }
 }
 
 module.exports = {
     gerarPuzzleMatematico,
     gerarPuzzleDecodificador,
     iniciarMissao,
-    carregarProgressoMissao
+    carregarProgressoMissao,
+    verificarMissaoConcluida
 };
