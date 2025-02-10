@@ -47,13 +47,13 @@ nav:
   - Módulo 1:
     - Modelo Entidade-Relacionamento:
       - V1: modulo1/MER_Cyberpunk.md
+      - V2: modulo1/MER_v2.md
     - Diagrama Entidade-Relacionamento:
       - V1: modulo1/DER_Cyberpunk.md
       - V2: modulo1/DER-v2.md
     - Modelo Relacional:
       - V1: modulo1/Modelo_Relacional.md
-    - Dicionário de Dados:
-      - V1: modulo1/Dicionario.md
+    - Dicionário de Dados: modulo1/Dicionario.md
   - Módulo 2: 
       - DDL: modulo2/ddl.md
       - DML: modulo2/dml.md
