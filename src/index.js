@@ -93,7 +93,7 @@ async function getCyberLutadores() {
 
 async function adicionarCyberLutador(nomeCyberLutador, fkSalaAtual) {
   try {
-    const atributosAleatorios = Array.from({ length: 7 }, () => Math.floor(Math.random() * 5)); // Valores entre 0 e 4
+    const atributosAleatorios = Array.from({ length: 7 }, () => Math.floor(Math.random() * 4) + 1); // Valores entre 1 e 4
     const [inteligencia, resistencia, furtividade, percepcao, vida, velocidade, forca] = atributosAleatorios;
 
     const queryInsercao = `
