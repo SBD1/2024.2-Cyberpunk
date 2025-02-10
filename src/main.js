@@ -1,7 +1,7 @@
 const { Pool } = require('pg');
 const prompt = require('prompt-sync')();
 const { init, getSalas, getCyberLutadores, adicionarCyberLutador } = require('./index');
-const { iniciarMissao, carregarProgressoMissao } = require('./missaoPuzzle');
+const { iniciarMissao } = require('./missaoPuzzle'); // Removida a importação de verificarMissaoConcluida
 const { abrirMercado } = require('./mercado');
 const { interagirComNeon, interagirComShade, interagirComCipher } = require('./mentor');
 
@@ -190,40 +190,60 @@ async function iniciarJogo() {
         break;
 
       case "5":
-        if (!personagem) {
-            console.log("Você precisa selecionar um CyberLutador primeiro.");
-        } else if (personagem.salaAtual !== "Laboratorio") {
-            console.log("Você precisa estar no Laboratório para iniciar a missão.");
-        } else {
-            // Verificar se já existe uma missão em andamento
-            const query = `
-                SELECT idMissao FROM Missao
-                WHERE fk_cyberlutador = $1 AND progresso != 'Concluída';
-            `;
-            const res = await pool.query(query, [personagem.id]);
-
-            if (res.rows.length > 0) {
-                console.log("Você já tem uma missão em andamento. Use a opção 'Continuar Missão'.");
-            } else {
-                // Criar uma nova missão
-                const insertQuery = `
-                    INSERT INTO Missao (nomeMissao, objetivo, progresso, fk_sala, fk_cyberlutador)
-                    VALUES ('Missão Principal', 'Recuperar o controle do sistema', '0/5', (SELECT idSala FROM Sala WHERE nomeSala = 'Laboratorio'), $1)
-                    RETURNING idMissao;
-                `;
-                const insertRes = await pool.query(insertQuery, [personagem.id]);
-                const idMissao = insertRes.rows[0].idmissao;
-
-                await iniciarMissao(personagem, pool, idMissao);
-            }
-        }
-        break;
+          if (!personagem) {
+              console.log("Você precisa selecionar um CyberLutador primeiro.");
+          } else if (personagem.salaAtual !== "Laboratorio" && personagem.salaAtual !== "Ruinas Ciberneticas" && personagem.salaAtual !== "Distrito Neon") {
+              console.log("Você precisa estar no Laboratório, Ruínas Cibernéticas ou Distrito Neon para iniciar a missão.");
+          } else {
+              const query = `
+                  SELECT idMissao FROM Missao
+                  WHERE fk_cyberlutador = $1 AND progresso != 'Concluída';
+              `;
+              const res = await pool.query(query, [personagem.id]);
+      
+              if (res.rows.length > 0) {
+                  console.log("Você já tem uma missão em andamento. Use a opção 'Continuar Missão'.");
+              } else {
+                  let nomeMissao, objetivo;
+                  if (personagem.salaAtual === "Laboratorio") {
+                      nomeMissao = 'Missão Principal';
+                      objetivo = 'Recuperar o controle do sistema';
+                  } else if (personagem.salaAtual === "Ruinas Ciberneticas") {
+                      nomeMissao = 'Missão Secundária';
+                      objetivo = 'Restaurar a energia das Ruínas Cibernéticas';
+                  } else if (personagem.salaAtual === "Distrito Neon") {
+                      nomeMissao = 'Missão Terciária';
+                      objetivo = 'Desativar os sistemas de segurança do Distrito Neon';
+                  }
+      
+                  // Obter o ID da sala atual
+                  const querySala = `SELECT idSala FROM Sala WHERE nomeSala = $1;`;
+                  const resSala = await pool.query(querySala, [personagem.salaAtual]);
+                  const fkSala = resSala.rows[0].idsala;
+      
+                  if (!fkSala) {
+                      console.log("Erro: Sala não encontrada.");
+                      return;
+                  }
+      
+                  const insertQuery = `
+                      INSERT INTO Missao (nomeMissao, objetivo, progresso, fk_sala, fk_cyberlutador)
+                      VALUES ($1, $2, '0/5', $3, $4)
+                      RETURNING idMissao;
+                  `;
+                  const insertRes = await pool.query(insertQuery, [nomeMissao, objetivo, fkSala, personagem.id]);
+                  const idMissao = insertRes.rows[0].idmissao;
+      
+                  await iniciarMissao(personagem, pool, idMissao);
+              }
+          }
+          break;
 
       case "6":
         if (!personagem) {
             console.log("Você precisa selecionar um CyberLutador primeiro.");
-        } else if (personagem.salaAtual !== "Laboratorio") {
-            console.log("Você precisa estar no Laboratório para continuar a missão.");
+        } else if (personagem.salaAtual !== "Laboratorio" && personagem.salaAtual !== "Ruinas Ciberneticas" && personagem.salaAtual !== "Distrito Neon") {
+            console.log("Você precisa estar no Laboratório, Ruínas Cibernéticas ou Distrito Neon para continuar a missão.");
         } else {
             const query = `
                 SELECT idMissao FROM Missao
