@@ -129,3 +129,8 @@ UPDATE Sala SET sul = 19, leste = 23 WHERE idSala = 21 AND (sul IS NULL OR leste
 UPDATE Sala SET norte = 20, leste = 24 WHERE idSala = 22 AND (norte IS NULL OR leste IS NULL);
 UPDATE Sala SET oeste = 21 WHERE idSala = 23 AND oeste IS NULL;
 UPDATE Sala SET oeste = 22 WHERE idSala = 24 AND oeste IS NULL;
+
+-- SALA DE PARA JOGAR OS INIMIGOS.
+INSERT INTO Sala (nomeSala, fk_regiao)
+SELECT 'Cemiterio Digital', (SELECT idRegiao FROM Regiao WHERE nomeRegiao = 'Darknet Town' LIMIT 1)
+WHERE NOT EXISTS (SELECT 1 FROM Sala WHERE nomeSala = 'Cemiterio Digital');

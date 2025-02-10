@@ -51,7 +51,8 @@ async function getSalas() {
       SELECT *
       FROM Sala s
       LEFT JOIN Regiao r ON s.fk_regiao = r.idRegiao
-    `);
+      WHERE s.nomeSala != 'Cemiterio Digital'  -- Para não aparecer o local onde os inimigos estão
+  `);
     return res.rows;
   } catch (error) {
     console.error('Erro ao consultar as salas:', error);
@@ -92,7 +93,7 @@ async function getCyberLutadores() {
 
 async function adicionarCyberLutador(nomeCyberLutador, fkSalaAtual) {
   try {
-    const atributosAleatorios = Array.from({ length: 7 }, () => Math.floor(Math.random() * 5)); // Valores entre 0 e 4
+    const atributosAleatorios = Array.from({ length: 7 }, () => Math.floor(Math.random() * 4) + 1); // Valores entre 1 e 4
     const [inteligencia, resistencia, furtividade, percepcao, vida, velocidade, forca] = atributosAleatorios;
 
     const queryInsercao = `
@@ -100,7 +101,7 @@ async function adicionarCyberLutador(nomeCyberLutador, fkSalaAtual) {
         (nomeCyberLutador, inteligencia, resistencia, furtividade, percepcao, vida, velocidade, forca, fk_sala_atual)
       VALUES 
         ($1, $2, $3, $4, $5, $6, $7, $8, $9)
-      RETURNING idCyberLutador;
+      RETURNING idcyberlutador;
     `;
     const valuesInsercao = [
       nomeCyberLutador, inteligencia, resistencia, furtividade, percepcao, vida, velocidade, forca, fkSalaAtual
