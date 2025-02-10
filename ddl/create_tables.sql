@@ -127,16 +127,6 @@ CREATE TABLE IF NOT EXISTS Faccao (
   FOREIGN KEY (fk_cyberlutador) REFERENCES CyberLutador (idCyberLutador) ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS Implante (
-  idImplante INT PRIMARY KEY DEFAULT nextval('implante_id_seq'),
-  nomeImplante VARCHAR(50) NOT NULL,
-  tipo VARCHAR(50) NOT NULL,
-  fk_item INT NOT NULL,
-  fk_cyberlutador INT NOT NULL,
-  FOREIGN KEY (fk_item) REFERENCES Item (idItem) ON DELETE CASCADE,
-  FOREIGN KEY (fk_cyberlutador) REFERENCES CyberLutador (idCyberLutador)
-);
-
 CREATE TABLE IF NOT EXISTS InstanciaItem (
   idInstanciaItem INT PRIMARY KEY DEFAULT nextval('instancia_item_id_seq'),
   fk_item INT NOT NULL,
@@ -222,6 +212,14 @@ CREATE TABLE IF NOT EXISTS Mochila (
   FOREIGN KEY (fk_instanciaitem) REFERENCES InstanciaItem (idInstanciaItem) ON DELETE CASCADE
 );
 
+CREATE TABLE IF NOT EXISTS Mochila_Item (
+  fk_mochila INT NOT NULL,
+  fk_instanciaitem INT NOT NULL,
+  PRIMARY KEY (fk_mochila, fk_instanciaitem),
+  FOREIGN KEY (fk_mochila) REFERENCES Mochila (idMochila) ON DELETE CASCADE,
+  FOREIGN KEY (fk_instanciaitem) REFERENCES InstanciaItem (idInstanciaItem) ON DELETE CASCADE
+);
+
 CREATE TABLE IF NOT EXISTS Carro (
   idCarro INT PRIMARY KEY DEFAULT nextval('carro_id_seq'),
   combustivel INT NOT NULL,
@@ -234,7 +232,7 @@ CREATE TABLE IF NOT EXISTS Implante (
   nomeImplante VARCHAR(50) NOT NULL,
   tipo VARCHAR(50) NOT NULL,
   fk_item INT NOT NULL,
-  fk_cyberlutador INT NOT NULL,
+  fk_cyberlutador INT,
   FOREIGN KEY (fk_item) REFERENCES Item (idItem) ON DELETE CASCADE,
   FOREIGN KEY (fk_cyberlutador) REFERENCES CyberLutador (idCyberLutador)
 );

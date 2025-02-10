@@ -125,7 +125,7 @@ async function adicionarCyberLutador(nomeCyberLutador, fkSalaAtual) {
       switch (faccao) {
         case "1":
           console.log("Facção NetRunners selecionada!");
-          
+
           query = `INSERT INTO Faccao (fk_cyberlutador, nomeFaccao, ideologia) 
                    VALUES ($1, $2, $3);`;
           values = [idCyberLutador, "NetRunners", "Tecnologia e inovação"];
@@ -141,7 +141,7 @@ async function adicionarCyberLutador(nomeCyberLutador, fkSalaAtual) {
 
         case "2":
           console.log("Facção CodeKeepers selecionada!");
-          
+
           query = `INSERT INTO Faccao (fk_cyberlutador, nomeFaccao, ideologia) 
                    VALUES ($1, $2, $3);`;
           values = [idCyberLutador, "CodeKeepers", "Segurança e preservação"];
@@ -191,9 +191,9 @@ async function concluirMissao(idMissao) {
 async function init() {
   try {
     await waitForDatabase();
-    //  console.log('Resetando banco de dados...');
-    //  await executeSQLFile(path.join(__dirname, '../ddl/reset_db.sql'));
-    
+    // console.log('Resetando banco de dados...');
+    // await executeSQLFile(path.join(__dirname, '../ddl/reset_db.sql'));
+
     console.log('Criando tabelas...');
     await executeSQLFile(path.join(__dirname, '../ddl/create_tables.sql'));
 
@@ -205,6 +205,9 @@ async function init() {
 
     console.log('Inserindo NPCs...');
     await executeSQLFile(path.join(__dirname, '../dml/insert_npc.sql'));
+
+    console.log('Inserindo Itens...');
+    await executeSQLFile(path.join(__dirname, '../dml/insert_itens.sql'));
 
     console.log('Inserindo Triggers e Procedures...');
     await executeSQLFile(path.join(__dirname, '../triggers-procedures/triggers-procedures.sql'));
