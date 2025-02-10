@@ -4,6 +4,7 @@ const { init, getSalas, getCyberLutadores, adicionarCyberLutador } = require('./
 const { iniciarMissao } = require('./missaoPuzzle'); // Removida a importação de verificarMissaoConcluida
 const { abrirMercado } = require('./mercado');
 const { interagirComNeon, interagirComShade, interagirComCipher } = require('./mentor');
+const { verificarEIniciarBatalha } = require('./batalha');
 
 const pool = new Pool({
   user: 'postgres',
@@ -64,6 +65,8 @@ class CyberLutador {
         await interagirComCipher(this.id);
       }
   
+    await verificarEIniciarBatalha(prompt, this.id, salaEncontrada.idSala || salaEncontrada.idsala);
+
       if (this.salaAtual.toLowerCase() === "Cyber Mercado".toLowerCase()) {
         const query = 
         `SELECT idMercadoClandestino FROM MercadoClandestino WHERE fk_sala = $1;`;

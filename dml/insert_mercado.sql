@@ -21,3 +21,5 @@ WHERE NOT EXISTS (
     WHERE fk_mercado_clandestino = (SELECT idMercadoClandestino FROM MercadoClandestino WHERE nomeMercado = 'Mercado Secreto' LIMIT 1) 
     AND fk_instanciaitem = (SELECT idInstanciaItem FROM InstanciaItem WHERE fk_item = (SELECT idItem FROM Item WHERE nomeItem = 'Pacote de Dados') LIMIT 1)
 );
+
+

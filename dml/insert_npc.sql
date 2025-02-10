@@ -70,3 +70,213 @@ SELECT idNPC, 1, 1, 2
 FROM NPC 
 WHERE nomeNPC = 'Neon'
 AND NOT EXISTS (SELECT 1 FROM Mentor WHERE fk_npc = (SELECT idNPC FROM NPC WHERE nomeNPC = 'Neon'));
+
+-- 1. Insere um NPC que será usado como inimigo
+INSERT INTO NPC (nomeNPC, descricao, fk_sala)
+VALUES (
+  'Inimigo Básico',
+  'Um inimigo criado para batalhas simples.',
+  (SELECT idSala FROM Sala WHERE nomeSala = 'Laboratorio' LIMIT 1)
+);
+
+-- 2. Insere um registro na tabela Inimigo associando-o ao NPC criado
+INSERT INTO Inimigo (qtdDano, vida, fk_npc)
+VALUES (
+  1,    -- quantidade de dano que o inimigo causará
+  3,    -- pontos de vida do inimigo
+  (SELECT idNPC FROM NPC WHERE nomeNPC = 'Inimigo Básico' LIMIT 1)
+);
+
+-- 3. Insere uma instância deste inimigo para que ele possa ser enfrentado na batalha
+INSERT INTO InstanciaInimigo (fk_inimigo)
+VALUES (
+  (SELECT idInimigo FROM Inimigo WHERE fk_npc = (SELECT idNPC FROM NPC WHERE nomeNPC = 'Inimigo Básico' LIMIT 1) LIMIT 1)
+);
+----------------------------------------------------------
+-- Inimigo 1: Glitch Berserker (Ruínas Cibernéticas)
+----------------------------------------------------------
+INSERT INTO NPC (nomeNPC, descricao, fk_sala)
+SELECT 'Glitch Berserker', 'Humanoide digital com membros distorcidos emitindo pulsos eletromagnéticos.', 
+       (SELECT idSala FROM Sala WHERE nomeSala = 'Ruinas Ciberneticas' LIMIT 1)
+WHERE NOT EXISTS (SELECT 1 FROM NPC WHERE nomeNPC = 'Glitch Berserker');
+
+INSERT INTO Inimigo (qtdDano, vida, fk_npc)
+SELECT 1, 5, idNPC 
+FROM NPC 
+WHERE nomeNPC = 'Glitch Berserker'
+LIMIT 1;
+
+INSERT INTO InstanciaInimigo (fk_inimigo)
+SELECT idInimigo 
+FROM Inimigo 
+WHERE fk_npc = (SELECT idNPC FROM NPC WHERE nomeNPC = 'Glitch Berserker' LIMIT 1);
+
+----------------------------------------------------------
+-- Inimigo 2: Phantom Hacker (Submundo Hacker)
+----------------------------------------------------------
+INSERT INTO NPC (nomeNPC, descricao, fk_sala)
+SELECT 'Phantom Hacker', 'Fantasma digital que corrompe sistemas de defesa.', 
+       (SELECT idSala FROM Sala WHERE nomeSala = 'Submundo Hacker' LIMIT 1)
+WHERE NOT EXISTS (SELECT 1 FROM NPC WHERE nomeNPC = 'Phantom Hacker');
+
+INSERT INTO Inimigo (qtdDano, vida, fk_npc)
+SELECT 1, 5, idNPC 
+FROM NPC 
+WHERE nomeNPC = 'Phantom Hacker'
+LIMIT 1;
+
+INSERT INTO InstanciaInimigo (fk_inimigo)
+SELECT idInimigo 
+FROM Inimigo 
+WHERE fk_npc = (SELECT idNPC FROM NPC WHERE nomeNPC = 'Phantom Hacker' LIMIT 1);
+
+----------------------------------------------------------
+-- Inimigo 3: Drone Sentinel (Beco Data Stream)
+----------------------------------------------------------
+INSERT INTO NPC (nomeNPC, descricao, fk_sala)
+SELECT 'Drone Sentinel', 'Drone de combate com armadura reforçada e canhões plasma.', 
+       (SELECT idSala FROM Sala WHERE nomeSala = 'Beco Data Stream' LIMIT 1)
+WHERE NOT EXISTS (SELECT 1 FROM NPC WHERE nomeNPC = 'Drone Sentinel');
+
+INSERT INTO Inimigo (qtdDano, vida, fk_npc)
+SELECT 1, 5, idNPC 
+FROM NPC 
+WHERE nomeNPC = 'Drone Sentinel'
+LIMIT 1;
+
+INSERT INTO InstanciaInimigo (fk_inimigo)
+SELECT idInimigo 
+FROM Inimigo 
+WHERE fk_npc = (SELECT idNPC FROM NPC WHERE nomeNPC = 'Drone Sentinel' LIMIT 1);
+
+----------------------------------------------------------
+-- Inimigo 4: Crypt Guardian (Templo Cibernético)
+----------------------------------------------------------
+INSERT INTO NPC (nomeNPC, descricao, fk_sala)
+SELECT 'Crypt Guardian', 'Guardião ancestral de dados criptografados com escudo energético.', 
+       (SELECT idSala FROM Sala WHERE nomeSala = 'Templo Cibernético' LIMIT 1)
+WHERE NOT EXISTS (SELECT 1 FROM NPC WHERE nomeNPC = 'Crypt Guardian');
+
+INSERT INTO Inimigo (qtdDano, vida, fk_npc)
+SELECT 1, 5, idNPC 
+FROM NPC 
+WHERE nomeNPC = 'Crypt Guardian'
+LIMIT 1;
+
+INSERT INTO InstanciaInimigo (fk_inimigo)
+SELECT idInimigo 
+FROM Inimigo 
+WHERE fk_npc = (SELECT idNPC FROM NPC WHERE nomeNPC = 'Crypt Guardian' LIMIT 1);
+
+----------------------------------------------------------
+-- Inimigo 5: Rogue AI (Terminal Nexus Desativado)
+----------------------------------------------------------
+INSERT INTO NPC (nomeNPC, descricao, fk_sala)
+SELECT 'Rogue AI', 'Inteligência artificial defeituosa que ataca qualquer intruso.', 
+       (SELECT idSala FROM Sala WHERE nomeSala = 'Terminal Nexus Desativado' LIMIT 1)
+WHERE NOT EXISTS (SELECT 1 FROM NPC WHERE nomeNPC = 'Rogue AI');
+
+INSERT INTO Inimigo (qtdDano, vida, fk_npc)
+SELECT 1, 5, idNPC 
+FROM NPC 
+WHERE nomeNPC = 'Rogue AI'
+LIMIT 1;
+
+INSERT INTO InstanciaInimigo (fk_inimigo)
+SELECT idInimigo 
+FROM Inimigo 
+WHERE fk_npc = (SELECT idNPC FROM NPC WHERE nomeNPC = 'Rogue AI' LIMIT 1);
+
+----------------------------------------------------------
+-- Inimigo 6: Firewall Entity (Refúgio Rebelde)
+----------------------------------------------------------
+INSERT INTO NPC (nomeNPC, descricao, fk_sala)
+SELECT 'Firewall Entity', 'Manifestação digital de um firewall de segurança.', 
+       (SELECT idSala FROM Sala WHERE nomeSala = 'Refúgio Rebelde' LIMIT 1)
+WHERE NOT EXISTS (SELECT 1 FROM NPC WHERE nomeNPC = 'Firewall Entity');
+
+INSERT INTO Inimigo (qtdDano, vida, fk_npc)
+SELECT 1, 5, idNPC 
+FROM NPC 
+WHERE nomeNPC = 'Firewall Entity'
+LIMIT 1;
+
+INSERT INTO InstanciaInimigo (fk_inimigo)
+SELECT idInimigo 
+FROM Inimigo 
+WHERE fk_npc = (SELECT idNPC FROM NPC WHERE nomeNPC = 'Firewall Entity' LIMIT 1);
+----------------------------------------------------------
+-- Inimigo 7: Neon Marauder (Distrito Neon)
+----------------------------------------------------------
+INSERT INTO NPC (nomeNPC, descricao, fk_sala)
+SELECT 'Neon Marauder', 'Bandido cibernético que se camufla nos sinais luminosos do distrito.', 
+       (SELECT idSala FROM Sala WHERE nomeSala = 'Distrito Neon' LIMIT 1)
+WHERE NOT EXISTS (SELECT 1 FROM NPC WHERE nomeNPC = 'Neon Marauder');
+
+INSERT INTO Inimigo (qtdDano, vida, fk_npc)
+SELECT 1, 5, idNPC 
+FROM NPC 
+WHERE nomeNPC = 'Neon Marauder'
+LIMIT 1;
+
+INSERT INTO InstanciaInimigo (fk_inimigo)
+SELECT idInimigo 
+FROM Inimigo 
+WHERE fk_npc = (SELECT idNPC FROM NPC WHERE nomeNPC = 'Neon Marauder' LIMIT 1);
+
+----------------------------------------------------------
+-- Inimigo 8: Market Crawler (Arranha-céu Digital)
+----------------------------------------------------------
+INSERT INTO NPC (nomeNPC, descricao, fk_sala)
+SELECT 'Market Crawler', 'Entidade parasita que se alimenta de dados de transações ilegais.', 
+       (SELECT idSala FROM Sala WHERE nomeSala = 'Arranha-céu Digital' LIMIT 1)
+WHERE NOT EXISTS (SELECT 1 FROM NPC WHERE nomeNPC = 'Market Crawler');
+
+INSERT INTO Inimigo (qtdDano, vida, fk_npc)
+SELECT 1, 5, idNPC 
+FROM NPC 
+WHERE nomeNPC = 'Market Crawler'
+LIMIT 1;
+
+INSERT INTO InstanciaInimigo (fk_inimigo)
+SELECT idInimigo 
+FROM Inimigo 
+WHERE fk_npc = (SELECT idNPC FROM NPC WHERE nomeNPC = 'Market Crawler' LIMIT 1);
+
+----------------------------------------------------------
+-- Inimigo 9: Cipher Warden (Camara de Criptografia)
+----------------------------------------------------------
+INSERT INTO NPC (nomeNPC, descricao, fk_sala)
+SELECT 'Cipher Warden', 'Guardião automatizado que patrulha códigos criptografados.', 
+       (SELECT idSala FROM Sala WHERE nomeSala = 'Camara de Criptografia' LIMIT 1)
+WHERE NOT EXISTS (SELECT 1 FROM NPC WHERE nomeNPC = 'Cipher Warden');
+
+INSERT INTO Inimigo (qtdDano, vida, fk_npc)
+SELECT 1, 5, idNPC 
+FROM NPC 
+WHERE nomeNPC = 'Cipher Warden'
+LIMIT 1;
+
+INSERT INTO InstanciaInimigo (fk_inimigo)
+SELECT idInimigo 
+FROM Inimigo 
+WHERE fk_npc = (SELECT idNPC FROM NPC WHERE nomeNPC = 'Cipher Warden' LIMIT 1);
+
+----------------------------------------------------------
+-- Inimigo 10: Fortress Golem (Fortaleza Virtual)
+----------------------------------------------------------
+INSERT INTO NPC (nomeNPC, descricao, fk_sala)
+SELECT 'Fortress Golem', 'Constructo digital programado para eliminar invasores.', 
+       (SELECT idSala FROM Sala WHERE nomeSala = 'Fortaleza Virtual' LIMIT 1)
+WHERE NOT EXISTS (SELECT 1 FROM NPC WHERE nomeNPC = 'Fortress Golem');
+
+INSERT INTO Inimigo (qtdDano, vida, fk_npc)
+SELECT 1, 5, idNPC 
+FROM NPC 
+WHERE nomeNPC = 'Fortress Golem'
+LIMIT 1;
+
+INSERT INTO InstanciaInimigo (fk_inimigo)
+SELECT idInimigo 
+FROM Inimigo 
+WHERE fk_npc = (SELECT idNPC FROM NPC WHERE nomeNPC = 'Fortress Golem' LIMIT 1);
