@@ -106,9 +106,70 @@ Com a criação do trigger, em vez de utilizarmos uma lógica de verificação a
 Este trigger chama um procedure para atulizar os atributos do CyberLutador, como inteligência e furtividade, quando ele interage com um NPC Mentor.
 </p>
 
+## Move o inimigo para o cemitério digital:
+
+```sql
+    CREATE OR REPLACE FUNCTION mover_inimigo_para_cemiterio(idInstanciaInimigo INT) RETURNS VOID AS $$
+    DECLARE
+        idSalaCemiterio INT;
+    BEGIN
+        SELECT idSala INTO idSalaCemiterio FROM Sala WHERE nomeSala = 'Cemiterio Digital';
+        
+        IF idSalaCemiterio IS NULL THEN
+            RAISE EXCEPTION 'Cemitério Digital não encontrado';
+        END IF;
+        
+        UPDATE NPC 
+        SET fk_sala = idSalaCemiterio 
+        WHERE idNPC = (
+            SELECT i.fk_npc 
+            FROM InstanciaInimigo ii
+            JOIN Inimigo i ON ii.fk_inimigo = i.idInimigo
+            WHERE ii.idInstanciaInimigo = idInstanciaInimigo
+        );
+
+        RAISE NOTICE 'Inimigo movido para o Cemitério Digital';
+    END;
+    $$ LANGUAGE plpgsql;
+
+```
+
+<p align="justify">
+Esse procedure move a instancia do inimigo para o cemitério dgital quando ele perde uma batalha par ao cyberlutrador.
+</p>
+
+## Reseta o jogador para a sala padrão:
+
+```sql
+    CREATE OR REPLACE FUNCTION resetar_jogador(idCyberLutador INT) RETURNS VOID AS $$
+    DECLARE
+        idLaboratorio INT;
+    BEGIN
+        SELECT idSala INTO idLaboratorio FROM Sala WHERE nomeSala = 'Laboratorio';
+        
+        IF idLaboratorio IS NULL THEN
+            RAISE EXCEPTION 'Laboratório não encontrado';
+        END IF;
+        
+        UPDATE CyberLutador 
+        SET vida = 10, fk_sala_atual = idLaboratorio
+        WHERE idCyberLutador = idCyberLutador;
+        
+        RAISE NOTICE 'Jogador resetado no Laboratório com vida cheia';
+    END;
+    $$ LANGUAGE plpgsql;
+
+```
+
+<p align="justify">
+Este procedure move o cyberlutador para a salão padrão 'laboratório' e reseta sua vida, quando ele perde uma batalha para o inimigo.
+</p>
+
 ## Histórico de versões
 
 | Versão |  Data  | Descrição | Autor | 
 |:------:|:------:|:---------:|------:|
 | 1.0 | 03/02/2025 | Criação e escrita | [Lucas Meireles](https://github.com/Katuner) |
 | 1.1 | 03/02/2025 | Atualização de exemplo | [Lucas Meireles](https://github.com/Katuner) |
+| 1.4 | 10/02/2025 | Inserção de novos triggers e procedures | [Gabrielly Assuncao](https://github.com/GabriellyAssuncao) |
+
