@@ -53,6 +53,7 @@ nav:
       - V2: modulo1/DER-v2.md
     - Modelo Relacional:
       - V1: modulo1/Modelo_Relacional.md
+      - V2: modulo1/Modelo_RelacionalV2.md
     - Dicionário de Dados: modulo1/Dicionario.md
   - Módulo 2: 
       - DDL: modulo2/ddl.md
