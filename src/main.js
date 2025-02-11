@@ -72,8 +72,8 @@ class CyberLutador {
         `SELECT idMercadoClandestino FROM MercadoClandestino WHERE fk_sala = $1;`;
         const values = [salaEncontrada.idSala];
         const res = await pool.query(query, values);
-        const idMercado = res.rows[0].idmercadoclandestino;
-        await abrirMercado(idMercado, this);
+        // const idMercado = res.rows[0].idmercadoclandestino;
+        await abrirMercado(5, this);
       }
     } catch (error) {
       console.error("Erro ao tentar se deslocar:", error.message);
