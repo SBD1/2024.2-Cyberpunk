@@ -21,7 +21,7 @@ async function abrirMercado(idMercado, personagem) {
     
     switch (opcao) {
       case "1":
-        await comprarItens(idMercado, personagem);
+        await comprarItens(5, personagem);
         break;
       case "2":
         console.log("Saindo do mercado...");
@@ -41,11 +41,11 @@ async function comprarItens(idMercado, personagem) {
     FROM Mercado_Item mi
     JOIN InstanciaItem ii ON mi.fk_instanciaitem = ii.idInstanciaItem
     JOIN Item i ON ii.fk_item = i.idItem
-    WHERE mi.fk_mercado_clandestino = $1;
+    WHERE mi.fk_mercado_clandestino = 1;
   `;
   
   try {
-    const { rows } = await pool.query(query, [idMercado]);
+    const { rows } = await pool.query(query);
 
     if (rows.length === 0) {
       console.log("Este mercado não possui itens disponíveis.");
@@ -60,7 +60,7 @@ async function comprarItens(idMercado, personagem) {
       itemIds.push(item.iditem);
     });
 
-    let escolha = parseInt(prompt("\nDigite o número do item que deseja comprar: "));
+    let escolha = parseInt(prompt("Digite o número do item que deseja comprar: "));
     
     if (isNaN(escolha) || escolha < 1 || escolha > itemIds.length) {
       console.log("Escolha inválida!");
@@ -93,5 +93,6 @@ async function comprarItens(idMercado, personagem) {
     console.error("Erro ao listar os itens do mercado:", error.message);
   }
 }
+
 
 module.exports = { abrirMercado };

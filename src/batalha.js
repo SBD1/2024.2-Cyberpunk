@@ -196,7 +196,7 @@ async function verificarEIniciarBatalha(prompt, idCyberLutador, idSala) {
             console.log("\nUm inimigo apareceu! Prepare-se para a batalha!");
             return iniciarBatalha(prompt, idCyberLutador, idInstanciaInimigo, idSala);
         } else {
-            console.log("Nenhum inimigo encontrado nesta sala.");
+            // console.log("Nenhum inimigo encontrado nesta sala.");
             return null;
         }
     } catch (error) {
