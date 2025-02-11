@@ -18,7 +18,7 @@ async function abrirMercado(idMercado, personagem) {
     console.log("1. Comprar itens");
     console.log("2. Sair do mercado");
     opcao = prompt("\nEscolha uma opção: ");
-    
+
     switch (opcao) {
       case "1":
         await comprarItens(5, personagem);
@@ -43,7 +43,7 @@ async function comprarItens(idMercado, personagem) {
     JOIN Item i ON ii.fk_item = i.idItem
     WHERE mi.fk_mercado_clandestino = 1;
   `;
-  
+
   try {
     const { rows } = await pool.query(query);
 
@@ -60,13 +60,13 @@ async function comprarItens(idMercado, personagem) {
       itemIds.push(item.iditem);
     });
 
-    let escolha = parseInt(prompt("Digite o número do item que deseja comprar: "));
+    let escolha = parseInt(prompt("\nDigite o número do item que deseja comprar: "));
     
     if (isNaN(escolha) || escolha < 1 || escolha > itemIds.length) {
       console.log("Escolha inválida!");
       return;
     }
-    
+
     let idItemEscolhido = itemIds[escolha - 1];
     console.log(`Você escolheu: ${rows[escolha - 1].nomeitem}`);
 
@@ -74,6 +74,13 @@ async function comprarItens(idMercado, personagem) {
       UPDATE Mochila 
       SET fk_instanciaitem = $1 
       WHERE fk_cyberlutador = $2
+      RETURNING *;
+
+      INSERT INTO Mochila_Item (fk_instanciaitem, fk_mochila)
+      VALUES (
+        $1,
+        (SELECT idMochila FROM Mochila WHERE fk_cyberlutador = $2)
+      )
       RETURNING *;
     `;
     const values = [idItemEscolhido, personagem.id];
