@@ -20,6 +20,35 @@ Este projeto foi desenvolvido na Universidade de Brasília, durante a disciplina
 O jogo se passa em um futuro distópico de estilo cyberpunk, onde megacorporações controlam grande parte da sociedade, e a tecnologia avançada se mistura com uma realidade sombria e decadente. Neste mundo, o protagonista é um hacker habilidoso que enfrenta ameaças de corporações poderosas, lutando para defender seus ideais. À medida que avança, o protagonista deve usar suas habilidades de invasão e manipulação de dados para superar os desafios e desmascarar segredos que moldam o destino desse universo futurista.
 </p>
 
+
+## Execução 🎮 
+
+Após clonar o projeto certifique-se de ter o docker e o docker compose instalados. Confira os tutorias disponíveis em:
+
+### Linux
+> Docker Docs  <https://docs.docker.com/engine/install/>
+> 
+> Docker Docs  <https://docs.docker.com/engine/install/linux-postinstall/>
+
+### Windows
+>Docker Docs <https://docs.docker.com/desktop/setup/install/windows-install/>
+
+### Mac
+
+>Docker Docs <https://docs.docker.com/desktop/setup/install/mac-install/>
+
+#### Na pasta root do projeto execute:
+
+```docker
+docker compose up --build
+```
+
+#### Em outra aba do terminal inicie o jogo:
+
+```docker
+docker exec -it cyberpunk node src/main.js
+```
+
 ## Integrantes
 
 <div align="center">
